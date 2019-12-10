@@ -5,21 +5,37 @@
         </header>
 
         <main>
+            <image-section v-for="(src,index) in images" :src="src" :key="`image-${index}`"></image-section>
             <add-button></add-button>
         </main>
     </div>
 </template>
 
 <script>
-    import AddButton from "./components/add-button";
+    import addButton from "./components/add-button";
+    import imageSection from "./components/image-section";
+    import firstImage from "./assets/start-image1.jpg";
+    import secondImage from "./assets/start-image2.jpg";
+    import thirdImage from "./assets/start-image4.jpg";
+    import fourthImage from "./assets/start-image4.jpg";
+    import fifthImage from "./assets/start-image5.jpg";
+    import sixthImage from "./assets/start-image6.jpg";
+    import seventhImage from "./assets/start-image7.jpg";
 
     export default {
         name: 'app',
+        data() {
+            return {
+                images: [firstImage, secondImage, thirdImage, fourthImage, fifthImage,
+                    sixthImage,seventhImage],
+            }
+        },
         components: {
-            "add-button": AddButton
+            "add-button": addButton,
+            "image-section": imageSection
         }
-
     }
+
 </script>
 
 <style scope lang="scss">
@@ -40,7 +56,7 @@
         }
     }
 
-    main{
+    main {
         display: grid;
         grid-template-columns: repeat(4, 236px);
         grid-template-rows: repeat(3, 200px);
