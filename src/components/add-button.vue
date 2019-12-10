@@ -1,11 +1,11 @@
 <template>
-    <section id="addBtn" class="grid-section">
+    <section id="addBtn" class="grid-section" @click="addImage">
         <figure>
             <img :src="addButtonImage" alt="add button"/>
             <figcaption>Add your Picture</figcaption>
         </figure>
 
-        <input v-show="addButtonStatus" type="file" name="userfile"/>
+        <input ref="input" v-show="addButtonStatus" type="file" name="userfile"/>
     </section>
 </template>
 
@@ -19,12 +19,19 @@
                 addButtonStatus: false,
                 addButtonImage
             }
+        },
+        methods: {
+            addImage(){
+                this.$refs.input.click();
+            }
         }
     }
 </script>
 
 <style scope lang="scss">
     #addBtn{
+        cursor: pointer;
+
         figure{
             position: absolute;
             top: 50%;
@@ -32,7 +39,6 @@
             width: 72px;
             margin-top: -45px;
             margin-left: -36px;
-            cursor: pointer;
 
             img{
                 display: block;
