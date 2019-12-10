@@ -1,0 +1,28 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#app {
+    width: 1024px;
+    height: 768px;
+    padding: 25px;
+    background: #f0f3f6;
+}
+
+.grid-section{
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: 50% 50% !important;
+    background: #fff;
+}
