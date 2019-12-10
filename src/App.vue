@@ -5,29 +5,20 @@
         </header>
 
         <main>
-            <section id="addBtn" class="grid-section">
-                <figure>
-                    <img :src="addButtonImage" alt="add button"/>
-                    <figcaption>Add your Picture</figcaption>
-                </figure>
-
-                <input v-show="addBtnClick" type="file" name="userfile"/>
-            </section>
+            <add-button></add-button>
         </main>
     </div>
 </template>
 
 <script>
-    import addButtonImage from "./assets/add-btn.png";
+    import AddButton from "./components/add-button";
 
     export default {
         name: 'app',
-        data() {
-            return {
-                addButtonImage,
-                addBtnClick: false,
-            }
+        components: {
+            "add-button": AddButton
         }
+
     }
 </script>
 
@@ -57,62 +48,9 @@
         grid-gap: 10px;
         grid-auto-flow: column;
         height: 697px;
-
-        #addBtn{
-            figure{
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 72px;
-                margin-top: -45px;
-                margin-left: -36px;
-                cursor: pointer;
-
-                img{
-                    display: block;
-                    width: 52px;
-                    margin: 0 auto;
-                }
-
-                figcaption{
-                    width: 72px;
-                    font-size: 14px;
-                    font-weight: bold;
-                    text-align: center;
-                    color: #a0b0ba;
-                }
-            }
-        }
     }
 </style>
 
 <style>
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100vw;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Open Sans', sans-serif;
-    }
-
-    #app {
-        width: 1024px;
-        height: 768px;
-        padding: 25px;
-        background: #f0f3f6;
-    }
-
-    .grid-section{
-        position: relative;
-        overflow: hidden;
-        border-radius: 5px;
-        background-size: cover !important;
-        background-repeat: no-repeat !important;
-        background-position: 50% 50% !important;
-        background: #fff;
-    }
+    @import "main.css";
 </style>
