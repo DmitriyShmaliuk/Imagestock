@@ -6,7 +6,7 @@
 
         <main>
             <image-section v-for="(src,index) in images" :src="src" :key="`image-${index}`"></image-section>
-            <add-button></add-button>
+            <add-button @add-image="addImage"></add-button>
         </main>
     </div>
 </template>
@@ -33,6 +33,11 @@
         components: {
             "add-button": addButton,
             "image-section": imageSection
+        },
+        methods:{
+            addImage(image){
+                this.images.push(image);
+            }
         }
     }
 
