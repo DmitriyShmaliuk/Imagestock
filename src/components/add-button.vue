@@ -1,11 +1,13 @@
 <template>
-    <section id="addBtn" class="grid-section" @click="addImage">
-        <figure>
-            <img :src="addButtonImage" alt="add button"/>
-            <figcaption>Add your Picture</figcaption>
-        </figure>
+    <section id="addBtn" class="grid-section">
+       <label>
+           <figure>
+               <img :src="addButtonImage" alt="add button"/>
+               <figcaption>Add your Picture</figcaption>
+            </figure>
 
-        <input ref="input" v-show="addButtonStatus" type="file" name="userfile"/>
+           <input @change="addSection" v-show="addButtonStatus" type="file" name="userfile"/>
+       </label>
     </section>
 </template>
 
@@ -21,8 +23,16 @@
             }
         },
         methods: {
-            addImage(){
-                this.$refs.input.click();
+            addSection({target}){
+                let reader = new FileReader();
+
+                reader.onloadend = () => {
+                    this.$emit('add-image', reader.result);
+                }
+
+                if (target.files[0]) {
+                    reader.readAsDataURL(target.files[0]);
+                }
             }
         }
     }
@@ -44,6 +54,7 @@
                 display: block;
                 width: 52px;
                 margin: 0 auto;
+                cursor: pointer;
             }
 
             figcaption{
@@ -52,6 +63,7 @@
                 font-weight: bold;
                 text-align: center;
                 color: #a0b0ba;
+                cursor: pointer;
             }
         }
     }
