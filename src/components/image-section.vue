@@ -1,5 +1,5 @@
 <template>
-   <section class="grid-section image-section" :style="{'background-image': `url(${src})`}">
+   <section class="grid-section image-section" :style="{'background': `url(${src})`}">
    </section>
 </template>
 
