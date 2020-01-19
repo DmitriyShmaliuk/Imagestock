@@ -12,9 +12,8 @@
 </template>
 
 <script>
-    import addButton from "./components/add-button";
-    import imageSection from "./components/image-section";
-
+    import addButton from "./components/AddButton.vue";
+    import imageSection from "./components/ImageSection.vue";
 
     export default {
         name: 'app',
@@ -22,6 +21,19 @@
             return {
                 images: [],
                 countImagesSection: 1,
+            }
+        },
+        created() {
+            const IMAGESTOCK_DATA = localStorage.getItem("imagestock");
+            if (IMAGESTOCK_DATA){
+                const localeStore = JSON.parse(IMAGESTOCK_DATA);
+
+                Array.prototype.forEach.call(localeStore, (el)=>{
+                    this.images.push(el);
+                })
+            }
+            else{
+                this.images = [];
             }
         },
         components: {
@@ -63,6 +75,8 @@
                 if(this.images.length % 9 === 0){
                     ++this.countImagesSection;
                 }
+
+                localStorage.setItem("imagestock", JSON.stringify(this.images));
             }
         }
     }
