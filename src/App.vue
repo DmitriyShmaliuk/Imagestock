@@ -1,14 +1,15 @@
 <template>
-    <div id="app">
+    <v-app>
         <header>
             <h1>Welcome to <span>imagestock</span></h1>
         </header>
 
         <main>
-            <image-section v-for="(image,index) in images" :src="image.src" :style="image.style" :key="`image-${index}`"></image-section>
-            <add-button @add-image="addImage"></add-button>
+            <image-section v-for="(image,index) in images" :src="image.src" :style="image.style"
+                           :key="`image-${index}`"/>
+            <add-button @add-image="addImage"/>
         </main>
-    </div>
+    </v-app>
 </template>
 
 <script>
@@ -37,8 +38,8 @@
             }
         },
         components: {
-            "add-button": addButton,
-            "image-section": imageSection
+            addButton,
+            imageSection
         },
         methods:{
             addImage(image){
@@ -46,7 +47,7 @@
 
                 if (this.countImagesSection >= 2 ){
                     let currentPosition = this.images.length - ((this.countImagesSection-1)*9);
-                    
+
                     if (currentPosition === 1){
                         this.images[this.images.length-1].style = {
                             gridColumnStart: 5 * (this.countImagesSection - 1),
@@ -83,7 +84,7 @@
 
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
     header {
         position: relative;
         z-index: 3;
@@ -102,48 +103,48 @@
     }
 
     main {
-        display: grid;
-        grid-template-columns: repeat(4, 236px);
-        grid-template-rows: repeat(3, 200px);
-        grid-auto-columns: 236px;
-        grid-gap: 10px;
-        grid-auto-flow: column;
-        height: 697px;
-        overflow: auto;
+      display: grid;
+      grid-template-columns: repeat(4, 236px);
+      grid-template-rows: repeat(3, 200px);
+      grid-auto-columns: 236px;
+      grid-gap: 10px;
+      grid-auto-flow: column;
+      height: 697px;
+      overflow: auto;
 
-        .grid-section{
-            position: relative;
-            overflow: hidden;
-            border-radius: 5px;
-            background-size: cover !important;
-            background-repeat: no-repeat !important;
-            background-position: 50% 50% !important;
-            background: #fff;
-        }
+      .grid-section{
+        position: relative;
+        overflow: hidden;
+        border-radius: 5px;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+        background-position: 50% 50% !important;
+        background: #fff;
+      }
 
-        .image-section:nth-of-type(1){
-            grid-column-start:1;
-            grid-column-end: 3;
-            grid-row-start: 1;
-            grid-row-end: 2;
-        }
+      .image-section:nth-of-type(1){
+        grid-column-start:1;
+        grid-column-end: 3;
+        grid-row-start: 1;
+        grid-row-end: 2;
+      }
 
-        .image-section:nth-of-type(6){
-            grid-column-start: 3;
-            grid-column-end: 4;
-            grid-row-end: 3;
-            grid-row-start: 1;
-        }
+      .image-section:nth-of-type(6){
+        grid-column-start: 3;
+        grid-column-end: 4;
+        grid-row-end: 3;
+        grid-row-start: 1;
+      }
 
-        .image-section:nth-of-type(5){
-            grid-column-start: 2;
-            grid-column-end: 4;
-            grid-row-end: 3;
-            grid-row-start: 4;
-        }
+      .image-section:nth-of-type(5){
+        grid-column-start: 2;
+        grid-column-end: 4;
+        grid-row-end: 3;
+        grid-row-start: 4;
+      }
     }
 </style>
 
-<style>
+<style lang="scss">
     @import "main.css";
 </style>
