@@ -6,7 +6,7 @@
                <figcaption>Add your Picture</figcaption>
             </figure>
 
-           <input @change="addSection" v-show="addButtonStatus" type="file" name="userfile"/>
+           <input @change="addSection" v-show="addButtonStatus" type="file"/>
        </label>
     </section>
 </template>
