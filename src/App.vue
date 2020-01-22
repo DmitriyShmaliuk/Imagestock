@@ -8,7 +8,8 @@
             <image-section v-for="(image,index) in images"
                            v-bind="image" :index="index"
                            :key="`image-${index}`"
-                           @incrementLike="incrementLike"/>
+                           @incrementLike="incrementLike"
+                           @incrementDislike="incrementDislike"/>
             <add-button @add-image="addImage"/>
         </main>
     </v-app>
@@ -48,7 +49,8 @@
                 this.images.push({src: image,
                                   style: {},
                                   countOfLike: 0,
-                                  countOfDislike: 0
+                                  countOfDislike: 0,
+                                  countOfComments: 0
                 });
 
                 if (this.countImagesSection >= 2 ){
@@ -90,6 +92,12 @@
                     this.images[index].countOfLike++;
                     localStorage.setItem("imagestock", JSON.stringify(this.images));
                 }
+            },
+            incrementDislike(index){
+                if(this.images.length > index){
+                    this.images[index].countOfDislike++;
+                    localStorage.setItem("imagestock", JSON.stringify(this.images));
+                }
             }
         }
     }
@@ -121,7 +129,7 @@
       grid-auto-columns: 236px;
       grid-gap: 10px;
       grid-auto-flow: column;
-      height: 697px;
+      height: 660px;
       overflow: auto;
 
       .grid-section{
@@ -154,6 +162,21 @@
         grid-row-end: 3;
         grid-row-start: 4;
       }
+    }
+
+    ::-webkit-scrollbar{
+        height: 12px;
+    }
+
+    ::-webkit-scrollbar-track{
+        background-color: #d1dae3;
+        border-radius: 20px;
+    }
+
+    ::-webkit-scrollbar-thumb{
+        width: 25%;
+        border-radius: 20px;
+        background-color: #21b8c6;
     }
 </style>
 
