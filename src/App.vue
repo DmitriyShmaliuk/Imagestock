@@ -9,15 +9,19 @@
                            v-bind="image" :index="index"
                            :key="`image-${index}`"
                            @incrementLike="incrementLike"
-                           @incrementDislike="incrementDislike"/>
+                           @incrementDislike="incrementDislike"
+                           @open-popup="isPopupOpened = true"/>
             <add-button @add-image="addImage"/>
+
+            <popup :isPopupOpened.sync="isPopupOpened"></popup>
         </main>
     </v-app>
 </template>
 
 <script>
-    import addButton from "./components/AddButton.vue";
-    import imageSection from "./components/ImageSection.vue";
+    import addButton from "./components/add-button.vue";
+    import imageSection from "./components/image-section.vue";
+    import popup from "./components/popup.vue";
 
     export default {
         name: 'app',
@@ -25,6 +29,7 @@
             return {
                 images: [],
                 countImagesSection: 1,
+                isPopupOpened: true
             }
         },
         created() {
@@ -42,7 +47,8 @@
         },
         components: {
             addButton,
-            imageSection
+            imageSection,
+            popup
         },
         methods:{
             addImage(image){
@@ -107,7 +113,6 @@
 <style scoped lang="scss">
     header {
         position: relative;
-        z-index: 3;
         margin-bottom: 10px;
 
         h1 {
@@ -180,6 +185,6 @@
     }
 </style>
 
-<style lang="scss">
+<style>
     @import "main.css";
 </style>
