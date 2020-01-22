@@ -5,8 +5,10 @@
         </header>
 
         <main>
-            <image-section v-for="(image,index) in images" :src="image.src" :style="image.style"
-                           :key="`image-${index}`"/>
+            <image-section v-for="(image,index) in images"
+                           v-bind="image" :index="index"
+                           :key="`image-${index}`"
+                           @incrementLike="incrementLike"/>
             <add-button @add-image="addImage"/>
         </main>
     </v-app>
@@ -43,7 +45,11 @@
         },
         methods:{
             addImage(image){
-                this.images.push({src: image, style: {}});
+                this.images.push({src: image,
+                                  style: {},
+                                  countOfLike: 0,
+                                  countOfDislike: 0
+                });
 
                 if (this.countImagesSection >= 2 ){
                     let currentPosition = this.images.length - ((this.countImagesSection-1)*9);
@@ -78,6 +84,12 @@
                 }
 
                 localStorage.setItem("imagestock", JSON.stringify(this.images));
+            },
+            incrementLike(index){
+                if(this.images.length > index){
+                    this.images[index].countOfLike++;
+                    localStorage.setItem("imagestock", JSON.stringify(this.images));
+                }
             }
         }
     }
