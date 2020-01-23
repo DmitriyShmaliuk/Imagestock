@@ -24,7 +24,7 @@
          </figure>
 
          <figure class="comments-icon"
-                 @click="$emit('open-popup')">
+                 @click="$emit('open-popup', index)">
             <v-icon color="#a0b0ba"
                     :size="28">mdi-message-reply</v-icon>
             <div class="badge">
