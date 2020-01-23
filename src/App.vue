@@ -10,10 +10,11 @@
                            :key="`image-${index}`"
                            @incrementLike="incrementLike"
                            @incrementDislike="incrementDislike"
-                           @open-popup="isPopupOpened = true"/>
+                           @open-popup="openPopup"/>
             <add-button @add-image="addImage"/>
 
-            <popup :isPopupOpened.sync="isPopupOpened"></popup>
+            <popup :isPopupOpened.sync="isPopupOpened"
+                   v-bind="currentElement"></popup>
         </main>
     </v-app>
 </template>
@@ -28,8 +29,9 @@
         data() {
             return {
                 images: [],
+                isPopupOpened: true,
                 countImagesSection: 1,
-                isPopupOpened: true
+                currentElement: {},
             }
         },
         created() {
@@ -104,6 +106,10 @@
                     this.images[index].countOfDislike++;
                     localStorage.setItem("imagestock", JSON.stringify(this.images));
                 }
+            },
+            openPopup(index){
+                this.currentElement = this.images[index];
+                this.isPopupOpened = true;
             }
         }
     }
