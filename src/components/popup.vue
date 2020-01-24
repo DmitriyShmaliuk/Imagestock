@@ -18,10 +18,10 @@
 
                 <v-container class="reaction-section">
                     <v-container class="dislike-icon">
-
+                        <v-icon :size="30">mdi-thumb-down</v-icon>
                     </v-container>
                     <v-container class="like-icon">
-
+                        <v-icon :size="30">mdi-thumb-up</v-icon>
                     </v-container>
                 </v-container>
             </v-container>
@@ -43,7 +43,19 @@ export default{
             type: String,
             default: defaultImage,
         }
+    },
+    data(){
+        return {
+            isLikeClicked: false,
+            isDisLikeClicked: false
+        }
+    },
+    computed:{
+        likeColor(){
+            return (this.isLikeClicked)
+        }
     }
+
 }
 </script>
 
@@ -95,10 +107,22 @@ export default{
                     background-color: #f5f6f4;
 
                     .dislike-icon, .like-icon{
+                        position: absolute;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        top: -10px;
                         width: 65px;
                         height: 60px;
+                        background-color: #e0e5e9;
+                    }
 
-                        border: 1px solid red;
+                    .like-icon{
+                        right: 0;
+                    }
+
+                    .dislike-icon{
+                        right: 75px;
                     }
                 }
             }
