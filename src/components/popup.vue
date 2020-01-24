@@ -17,11 +17,23 @@
                 </v-container>
 
                 <v-container class="reaction-section">
-                    <v-container class="dislike-icon">
-                        <v-icon :size="30">mdi-thumb-down</v-icon>
+                    <v-container class="dislike-icon"
+                                 :class="{active: isDisLikeClicked}">
+                        <v-icon :size="30"
+                                :color="disLikeColor">mdi-thumb-down</v-icon>
+
+                        <div class="badge">
+                            {{countOfDislike}}
+                        </div>
                     </v-container>
-                    <v-container class="like-icon">
-                        <v-icon :size="30">mdi-thumb-up</v-icon>
+                    <v-container class="like-icon"
+                                 :class="{active: isLikeClicked}">
+                        <v-icon :size="30"
+                                :color="likeColor">mdi-thumb-up</v-icon>
+
+                        <div class="badge">
+                            {{countOfLike}}
+                        </div>
                     </v-container>
                 </v-container>
             </v-container>
@@ -42,7 +54,15 @@ export default{
         src: {
             type: String,
             default: defaultImage,
-        }
+        },
+        countOfLike: {
+            type: Number,
+            default: 0,
+        },
+        countOfDislike: {
+            type: Number,
+            default: 0,
+        },
     },
     data(){
         return {
@@ -52,7 +72,10 @@ export default{
     },
     computed:{
         likeColor(){
-            return (this.isLikeClicked)
+            return (this.isLikeClicked)? "#ffffff" : "#a0b0ba";
+        },
+        disLikeColor(){
+            return (this.isDisLikeClicked)? "#ffffff" : "#a0b0ba";
         }
     }
 
@@ -76,6 +99,7 @@ export default{
             position: relative;
             width: 810px;
             height: 595px;
+            overflow: hidden;
             border-radius: 10px;
             background-color: #ffffff;
 
@@ -115,6 +139,26 @@ export default{
                         width: 65px;
                         height: 60px;
                         background-color: #e0e5e9;
+
+                        &.active{
+                            transform: translateY(10px);
+                            background-color: #d02828;
+                        }
+
+                        .badge{
+                            position: absolute;
+                            right: 8px;
+                            top: 12px;
+                            width: 17px;
+                            height: 17px;
+                            text-align: center;
+                            vertical-align: middle;
+                            color: #308a93;
+                            font-size: 9px;
+                            border-radius: 50%;
+                            background-color: #ffffff;
+                            border: 2px solid #a1b1bb;
+                        }
                     }
 
                     .like-icon{
