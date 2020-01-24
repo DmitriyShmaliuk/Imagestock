@@ -8,7 +8,7 @@
                 >mdi-close</v-icon>
             </v-container>
 
-            <v-container class="popup-content">
+            <v-container class="image-content">
                 <v-container class="image-section">
                     <v-img :src="src"
                             :height="550"
@@ -36,6 +36,12 @@
                         </div>
                     </v-container>
                 </v-container>
+            </v-container>
+
+            <v-container class="messages-content">
+                <header>
+                    <h2>Comments:</h2>
+                </header>
             </v-container>
         </v-container>
     </v-container>
@@ -108,9 +114,10 @@ export default{
                 top: 0;
                 right: 0;
                 width: auto;
+                z-index: 2
             }
 
-            .popup-content{
+            .image-content{
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -171,6 +178,18 @@ export default{
                 }
             }
 
+            .messages-content{
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 320px;
+
+                header{
+                    h2{
+                        color: #8499a7;
+                    }
+                }
+            }
         }
     }
 </style>
