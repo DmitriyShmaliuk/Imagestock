@@ -10,6 +10,7 @@
                            :src="image.src"
                            :countOfLike="image.countOfLike"
                            :countOfDislike="image.countOfDislike"
+                           :style="image.style"
                            :index="index"
                            :key="`image-${index}`"
                            @incrementLike="incrementLike"
@@ -50,7 +51,9 @@
 
                 Array.prototype.forEach.call(localeStore, (el)=>{
                     this.images.push(el);
-                })
+                });
+
+                this.countImagesSection = Math.trunc(this.images.length / 9) + 1;
             }
             else{
                 this.images = [];
@@ -72,7 +75,7 @@
 
                 if (this.countImagesSection >= 2 ){
                     let currentPosition = this.images.length - ((this.countImagesSection-1)*9);
-
+                    
                     if (currentPosition === 1){
                         this.images[this.images.length-1].style = {
                             gridColumnStart: 5 * (this.countImagesSection - 1),
