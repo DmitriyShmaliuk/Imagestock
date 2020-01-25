@@ -25,7 +25,7 @@ export default{
         sendInformation(){
             this.$emit('send-info', {userName: this.userName, userComment: this.userComment});
             this.userName = "";
-            this.userComent = "";
+            this.userComment = "";
         }
     }
 }
