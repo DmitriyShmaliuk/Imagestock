@@ -1,11 +1,13 @@
 <template>
-    <form class="comment-form">
+    <form class="comment-form"
+          @submit.prevent="$emit('send-info', {userName, userComment})">
+
         <input type="text" v-model="userName" placeholder="Type your nickname here"/>
-        <textarea placeholder="Write your comment here..."></textarea>
+        <textarea placeholder="Write your comment here..."
+                  v-model="userComment"></textarea>
 
         <button>
-            <v-icon color="#ffffff"
-                    :size="25">mdi-email</v-icon>
+            <v-icon color="#ffffff" :size="25">mdi-email</v-icon>
         </button>
     </form>
 </template>
@@ -52,7 +54,6 @@ export default{
             outline: none;
 
             &:focus{
-
                 border-color: #21b8c6;
             }
         }
