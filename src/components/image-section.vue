@@ -6,7 +6,7 @@
       <v-container class="reaction"
            :class="{active: isReactionSectionOpen}">
          <figure class="dislike-icon"
-                 @click="$emit('incrementDislike',index)">
+                 @click="clickDislike">
             <v-icon color="#a0b0ba"
                     :size="28">mdi-thumb-down</v-icon>
             <div class="badge">
@@ -15,7 +15,7 @@
          </figure>
 
          <figure class="like-icon"
-                 @click="$emit('incrementLike',index)">
+                 @click="clickLike">
             <v-icon color="#a0b0ba"
                     :size="28">mdi-thumb-up</v-icon>
            <div class="badge">
@@ -62,8 +62,36 @@ export default{
     },
    data(){
        return{
-          isReactionSectionOpen: false
+          isReactionSectionOpen: false,
+          isLikeClicked: false,
+          isDislikeClicked: false,
        }
+   },
+   methods:{
+       clickLike(){
+          if(!this.isLikeClicked){
+             this.$emit('increment-like', this.index);
+
+             if(this.isDislikeClicked){
+                this.$emit('decrement-dislike', this.index);
+                this.isDislikeClicked = false;
+             }
+
+             this.isLikeClicked = true;
+          }
+       },
+      clickDislike(){
+         if(!this.isDislikeClicked){
+            this.$emit('increment-dislike', this.index);
+
+            if(this.isLikeClicked){
+               this.$emit('decrement-like', this.index);
+               this.isLikeClicked = false;
+            }
+
+            this.isDislikeClicked = true;
+         }
+      }
    }
 }
 </script>
