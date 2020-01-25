@@ -1,18 +1,19 @@
 <template>
     <v-container class="comment-section">
         <v-container class="information">
-            <p>{{userName}}</p>
+            <p>By {{userName}}</p>
             <p>{{commentDate}}</p>
         </v-container>
 
         <v-container class="comment">
-
+            {{comment}}
         </v-container>
     </v-container>
 </template>
 
 <script>
 import {getDateString} from 'auxiliary-functions';
+
 export default {
     name: "comment-section",
     computed: {
@@ -24,6 +25,10 @@ export default {
         userName: {
             type: String,
             default: "User Name"
+        },
+        comment:{
+            type: String,
+            default: ""
         },
         date:{
             type: Date,
@@ -40,12 +45,27 @@ export default {
         width: 100%;
         margin-bottom: 10px;
         padding: 0;
-        border: 1px solid green;
 
-        .information{
+        .information {
             display: flex;
             justify-content: space-between;
             padding: 0;
+
+            & > p {
+                margin: 0;
+                font-family: Roboto, sans-serif;
+                font-size: 12px;
+                color: #95a7b3;
+            }
+        }
+
+        .comment {
+            min-height: 32px;
+            padding: 5px;
+            font-family: Roboto, sans-serif;
+            font-size: 14px;
+            color: #607583;
+            border: 1px solid #a0b0ba;
         }
     }
 </style>
