@@ -3,9 +3,7 @@
         <v-container class="popup">
             <v-container class="close-icon"
                          @click="$emit('update:isPopupOpened', false)">
-                <v-icon color="#21b8c6"
-                        :size="35"
-                >mdi-close</v-icon>
+                <v-icon color="#21b8c6" :size="35">mdi-close</v-icon>
             </v-container>
 
             <v-container class="image-content">
@@ -47,7 +45,7 @@
 
                 </article>
 
-                <comments-form></comments-form>
+                <comments-form @send-info="addComment"></comments-form>
             </v-container>
         </v-container>
     </v-container>
@@ -78,7 +76,9 @@ export default{
         },
         comments: {
             type: Array,
-            default: new Array(),
+            default: function(){
+                return []
+            }
         }
     },
     data(){
@@ -96,6 +96,13 @@ export default{
         },
         disLikeColor(){
             return (this.isDisLikeClicked)? "#ffffff" : "#a0b0ba";
+        }
+    },
+    methods: {
+        addComment(comment){
+            if(comment.userName && comment.userComment){
+                    this.$emit('add-comment', comment);
+            }
         }
     }
 
