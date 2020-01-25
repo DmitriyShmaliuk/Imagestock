@@ -16,7 +16,8 @@
 
                 <v-container class="reaction-section">
                     <v-container class="dislike-icon"
-                                 :class="{active: isDisLikeClicked}">
+                                 :class="{active: isDisLikeClicked}"
+                                 @click="incrementDislikes">
                         <v-icon :size="30"
                                 :color="disLikeColor">mdi-thumb-down</v-icon>
 
@@ -42,7 +43,11 @@
                 </header>
 
                 <article class="comments-section">
-
+                    <comment-section v-for="(comment,index) in comments"
+                                     :user-name="comment.userName"
+                                     :comment="comment.userComment"
+                                     :date="comment.date"
+                                     :key="`comment-${index}`"></comment-section>
                 </article>
 
                 <comments-form @send-info="addComment"></comments-form>
@@ -54,6 +59,7 @@
 <script>
 import defaultImage from '../assets/no-image.png';
 import commentsForm  from  './comment-form.vue';
+import commentSection from './comment-section';
 
 export default{
     name: "popup",
@@ -88,6 +94,7 @@ export default{
         }
     },
     components: {
+        commentSection,
         commentsForm
     },
     computed:{
@@ -103,9 +110,12 @@ export default{
             if(comment.userName && comment.userComment){
                     this.$emit('add-comment', comment);
             }
+        },
+        incrementDislikes(){
+            this.isDisLikeClicked = true;
+            this.$emit('increment-dislike');
         }
     }
-
 }
 </script>
 
@@ -211,6 +221,8 @@ export default{
 
                 header{
                     h2{
+                        font-family: "Roboto", sans-serif;
+                        font-size: 24px;
                         color: #8499a7;
                     }
                 }
@@ -218,7 +230,12 @@ export default{
                 .comments-section{
                     width: 300px;
                     height: 410px;
-                    border: 1px solid red;
+                    padding-right: 20px;
+                    overflow: auto;
+
+                    &::-webkit-scrollbar{
+                        width: 7px;
+                    }
                 }
             }
         }
