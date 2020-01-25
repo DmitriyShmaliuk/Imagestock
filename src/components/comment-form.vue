@@ -1,6 +1,6 @@
 <template>
     <form class="comment-form"
-          @submit.prevent="$emit('send-info', {userName, userComment})">
+          @submit.prevent="sendInformation">
 
         <input type="text" v-model="userName" placeholder="Type your nickname here"/>
         <textarea placeholder="Write your comment here..."
@@ -19,6 +19,13 @@ export default{
         return {
             userName: "",
             userComment: ""
+        }
+    },
+    methods:{
+        sendInformation(){
+            this.$emit('send-info', {userName: this.userName, userComment: this.userComment});
+            this.userName = "";
+            this.userComent = "";
         }
     }
 }
