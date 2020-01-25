@@ -18,7 +18,7 @@ export default {
     name: "comment-section",
     computed: {
         commentDate(){
-            return getDateString(this.date);
+            return getDateString(new Date(this.date));
         }
     },
     props: {
@@ -28,13 +28,11 @@ export default {
         },
         comment:{
             type: String,
-            default: ""
+            required: true
         },
         date:{
-            type: Date,
-            default: function(){
-                return new Date();
-            }
+            type: String,
+            required: true
         }
     }
 }
