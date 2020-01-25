@@ -6,15 +6,23 @@
 
         <main>
             <image-section v-for="(image,index) in images"
-                           v-bind="image" :index="index"
+                           :countOfComments="image.comments.length"
+                           :src="image.src"
+                           :countOfLike="image.countOfLike"
+                           :countOfDislike="image.countOfDislike"
+                           :index="index"
                            :key="`image-${index}`"
                            @incrementLike="incrementLike"
                            @incrementDislike="incrementDislike"
-                           @open-popup="openPopup"/>
-            <add-button @add-image="addImage"/>
+                           @open-popup="openPopup">
+            </image-section>
+
+            <add-button @add-image="addImage"></add-button>
 
             <popup :isPopupOpened.sync="isPopupOpened"
-                   v-bind="currentElement"></popup>
+                   v-bind="images[currentElement]"
+                   @add-comment="addComment">
+            </popup>
         </main>
     </v-app>
 </template>
@@ -29,15 +37,16 @@
         data() {
             return {
                 images: [],
-                isPopupOpened: true,
+                isPopupOpened: false,
                 countImagesSection: 1,
-                currentElement: {},
+                currentElement: null,
             }
         },
         created() {
-            const IMAGESTOCK_DATA = localStorage.getItem("imagestock");
-            if (IMAGESTOCK_DATA){
-                const localeStore = JSON.parse(IMAGESTOCK_DATA);
+            const IMAGES_STORE = localStorage.getItem("images-store");
+
+            if (IMAGES_STORE){
+                const localeStore = JSON.parse(IMAGES_STORE);
 
                 Array.prototype.forEach.call(localeStore, (el)=>{
                     this.images.push(el);
@@ -46,10 +55,6 @@
             else{
                 this.images = [];
             }
-
-            this.images.forEach((el)=>{
-                el.comments = [];
-            })
         },
         components: {
             addButton,
@@ -62,7 +67,7 @@
                                   style: {},
                                   countOfLike: 0,
                                   countOfDislike: 0,
-                                  comments: [],
+                                  comments: []
                 });
 
                 if (this.countImagesSection >= 2 ){
@@ -97,22 +102,31 @@
                     ++this.countImagesSection;
                 }
 
-                localStorage.setItem("imagestock", JSON.stringify(this.images));
+                localStorage.setItem("images-store", JSON.stringify(this.images));
+            },
+            addComment({userName, userComment}){
+                this.images[this.currentElement].comments.push({
+                        userName,
+                        userComment,
+                        date: new Date()
+                    });
+
+                localStorage.setItem("images-store", JSON.stringify(this.images));
             },
             incrementLike(index){
                 if(this.images.length > index){
                     this.images[index].countOfLike++;
-                    localStorage.setItem("imagestock", JSON.stringify(this.images));
+                    localStorage.setItem("images-store", JSON.stringify(this.images));
                 }
             },
             incrementDislike(index){
                 if(this.images.length > index){
                     this.images[index].countOfDislike++;
-                    localStorage.setItem("imagestock", JSON.stringify(this.images));
+                    localStorage.setItem("images-store", JSON.stringify(this.images));
                 }
             },
             openPopup(index){
-                this.currentElement = this.images[index];
+                this.currentElement = index;
                 this.isPopupOpened = true;
             }
         }
