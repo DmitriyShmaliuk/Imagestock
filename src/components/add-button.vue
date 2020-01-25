@@ -1,5 +1,5 @@
 <template>
-    <section id="addBtn" class="grid-section">
+    <section class="add-button grid-section">
        <label>
            <figure>
                <img :src="addButtonImage" alt="add button"/>
@@ -39,7 +39,7 @@
 </script>
 
 <style scope lang="scss">
-    #addBtn{
+    .add-button{
         cursor: pointer;
 
         figure{
