@@ -40,8 +40,14 @@
 
             <v-container class="messages-content">
                 <header>
-                    <h2>Comments:</h2>
+                    <h2>Comments: {{comments.length}}</h2>
                 </header>
+
+                <article class="comments-section">
+
+                </article>
+
+                <comments-form></comments-form>
             </v-container>
         </v-container>
     </v-container>
@@ -49,6 +55,7 @@
 
 <script>
 import defaultImage from '../assets/no-image.png';
+import commentsForm  from  './comment-form.vue';
 
 export default{
     name: "popup",
@@ -69,12 +76,19 @@ export default{
             type: Number,
             default: 0,
         },
+        comments: {
+            type: Array,
+            default: new Array(),
+        }
     },
     data(){
         return {
             isLikeClicked: false,
             isDisLikeClicked: false
         }
+    },
+    components: {
+        commentsForm
     },
     computed:{
         likeColor(){
@@ -184,10 +198,20 @@ export default{
                 right: 10px;
                 width: 320px;
 
+                &::v-deep .comment-form{
+                    margin-top: 10px;
+                }
+
                 header{
                     h2{
                         color: #8499a7;
                     }
+                }
+
+                .comments-section{
+                    width: 300px;
+                    height: 410px;
+                    border: 1px solid red;
                 }
             }
         }
