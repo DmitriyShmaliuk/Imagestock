@@ -46,6 +46,10 @@
             else{
                 this.images = [];
             }
+
+            this.images.forEach((el)=>{
+                el.comments = [];
+            })
         },
         components: {
             addButton,
@@ -58,7 +62,7 @@
                                   style: {},
                                   countOfLike: 0,
                                   countOfDislike: 0,
-                                  countOfComments: 0
+                                  comments: [],
                 });
 
                 if (this.countImagesSection >= 2 ){
@@ -173,21 +177,6 @@
         grid-row-end: 3;
         grid-row-start: 4;
       }
-    }
-
-    ::-webkit-scrollbar{
-        height: 12px;
-    }
-
-    ::-webkit-scrollbar-track{
-        background-color: #d1dae3;
-        border-radius: 20px;
-    }
-
-    ::-webkit-scrollbar-thumb{
-        width: 25%;
-        border-radius: 20px;
-        background-color: #21b8c6;
     }
 </style>
 
