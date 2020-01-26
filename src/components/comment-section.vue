@@ -60,9 +60,11 @@ export default {
         .comment {
             min-height: 32px;
             padding: 5px;
+            overflow: hidden;
             font-family: Roboto, sans-serif;
             font-size: 14px;
             color: #607583;
+            border-radius: 3px;
             border: 1px solid #a0b0ba;
         }
     }
