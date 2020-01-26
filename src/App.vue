@@ -10,19 +10,27 @@
                            :src="image.src"
                            :countOfLike="image.countOfLike"
                            :countOfDislike="image.countOfDislike"
+                           :isLikeClicked.sync="image.isLikeClicked"
+                           :isDislikeClicked.sync="image.isDislikeClicked"
                            :style="image.style"
                            :index="index"
                            :key="`image-${index}`"
-                           @incrementLike="incrementLike"
-                           @incrementDislike="incrementDislike"
+                           @increment-like="incrementLike"
+                           @increment-dislike="incrementDislike"
+                           @decrement-like="decrementLike"
+                           @decrement-dislike="decrementDislike"
                            @open-popup="openPopup">
             </image-section>
 
             <add-button @add-image="addImage"></add-button>
 
             <popup :isPopupOpened.sync="isPopupOpened"
-                   v-bind="images[currentElement]"
-                   @add-comment="addComment">
+                   v-bind.sync="images[currentElement]"
+                   @add-comment="addComment"
+                   @increment-like="incrementLike"
+                   @increment-dislike="incrementDislike"
+                   @decrement-like="decrementLike"
+                   @decrement-dislike="decrementDislike">
             </popup>
         </main>
     </v-app>
@@ -70,12 +78,14 @@
                                   style: {},
                                   countOfLike: 0,
                                   countOfDislike: 0,
-                                  comments: []
+                                  isLikeClicked: false,
+                                  isDislikeClicked: false,
+                                  comments: [],
                 });
 
                 if (this.countImagesSection >= 2 ){
                     let currentPosition = this.images.length - ((this.countImagesSection-1)*9);
-                    
+
                     if (currentPosition === 1){
                         this.images[this.images.length-1].style = {
                             gridColumnStart: 5 * (this.countImagesSection - 1),
@@ -111,22 +121,66 @@
                 this.images[this.currentElement].comments.push({
                         userName,
                         userComment,
-                        date: new Date()
+                        date: new Date().toString()
                     });
 
                 localStorage.setItem("images-store", JSON.stringify(this.images));
             },
             incrementLike(index){
-                if(this.images.length > index){
-                    this.images[index].countOfLike++;
-                    localStorage.setItem("images-store", JSON.stringify(this.images));
+                if (index !== undefined && !this.isPopupOpened){
+                    if(!this.images[index].isLikeClicked) {
+                        this.images[index].countOfLike++;
+                        this.images[index].isLikeClicked = true;
+                    }
                 }
+                else{
+                    if(!this.images[this.currentElement].isLikeClicked) {
+                        this.images[this.currentElement].countOfLike++;
+                        this.images[this.currentElement].isLikeClicked = true;
+                    }
+                }
+
+                localStorage.setItem("images-store", JSON.stringify(this.images));
             },
             incrementDislike(index){
-                if(this.images.length > index){
-                    this.images[index].countOfDislike++;
-                    localStorage.setItem("images-store", JSON.stringify(this.images));
+                if (index !== undefined && !this.isPopupOpened){
+                    if(!this.images[index].isDislikeClicked){
+                        this.images[index].countOfDislike++;
+                        this.images[index].isDislikeClicked = true;
+                    }
                 }
+                else{
+                    if(!this.images[this.currentElement].isDislikeClicked){
+                        this.images[this.currentElement].countOfDislike++;
+                        this.images[this.currentElement].isDislikeClicked = true;
+                    }
+                }
+
+                localStorage.setItem("images-store", JSON.stringify(this.images));
+            },
+            decrementLike(index){
+                if (index !== undefined && !this.isPopupOpened){
+                    this.images[index].countOfLike--;
+                    this.images[index].isLikeClicked = false;
+                }
+                else{
+                    this.images[this.currentElement].countOfLike--;
+                    this.images[this.currentElement].isLikeClicked = false;
+                }
+
+                localStorage.setItem("images-store", JSON.stringify(this.images));
+            },
+            decrementDislike(index){
+                if (index !== undefined && !this.isPopupOpened){
+                    this.images[index].countOfDislike--;
+                    this.images[index].isDislikeClicked = false;
+                }
+                else{
+                    this.images[this.currentElement].countOfDislike--;
+                    this.images[this.currentElement].isDislikeClicked = false;
+                }
+
+                localStorage.setItem("images-store", JSON.stringify(this.images));
             },
             openPopup(index){
                 this.currentElement = index;
