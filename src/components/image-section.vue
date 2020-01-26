@@ -3,8 +3,7 @@
             :style="{'background': `url(${src})`}"
             @mouseover="isReactionSectionOpen = !isReactionSectionOpen"
             @mouseout="isReactionSectionOpen = !isReactionSectionOpen">
-      <v-container class="reaction"
-           :class="{active: isReactionSectionOpen}">
+      <v-container class="reaction" :class="{active: isReactionSectionOpen}">
          <figure class="dislike-icon"
                  @click="clickDislike">
             <v-icon color="#a0b0ba"
@@ -55,6 +54,14 @@ export default{
           type: Number,
           default: 0
        },
+       isLikeClicked:{
+          type: Boolean,
+          default: false
+       },
+       isDislikeClicked:{
+          type: Boolean,
+          default: false
+       },
        index: {
           type: Number,
           required: true
@@ -63,33 +70,21 @@ export default{
    data(){
        return{
           isReactionSectionOpen: false,
-          isLikeClicked: false,
-          isDislikeClicked: false,
        }
    },
    methods:{
        clickLike(){
-          if(!this.isLikeClicked){
-             this.$emit('increment-like', this.index);
+          this.$emit('increment-like', this.index);
 
-             if(this.isDislikeClicked){
-                this.$emit('decrement-dislike', this.index);
-                this.isDislikeClicked = false;
-             }
-
-             this.isLikeClicked = true;
+          if(this.isDislikeClicked){
+             this.$emit('decrement-dislike', this.index);
           }
        },
       clickDislike(){
-         if(!this.isDislikeClicked){
-            this.$emit('increment-dislike', this.index);
+         this.$emit('increment-dislike', this.index);
 
-            if(this.isLikeClicked){
-               this.$emit('decrement-like', this.index);
-               this.isLikeClicked = false;
-            }
-
-            this.isDislikeClicked = true;
+         if(this.isLikeClicked){
+            this.$emit('decrement-like', this.index);
          }
       }
    }
