@@ -16,8 +16,8 @@
 
                 <v-container class="reaction-section">
                     <v-container class="dislike-icon"
-                                 :class="{active: isDisLikeClicked}"
-                                 @click="incrementDislikes">
+                                 :class="{active: isDislikeClicked}"
+                                 @click="clickDislike">
                         <v-icon :size="30"
                                 :color="disLikeColor">mdi-thumb-down</v-icon>
 
@@ -26,7 +26,8 @@
                         </div>
                     </v-container>
                     <v-container class="like-icon"
-                                 :class="{active: isLikeClicked}">
+                                 :class="{active: isLikeClicked}"
+                                 @click="clickLike">
                         <v-icon :size="30"
                                 :color="likeColor">mdi-thumb-up</v-icon>
 
@@ -80,17 +81,19 @@ export default{
             type: Number,
             default: 0,
         },
+        isLikeClicked:{
+            type: Boolean,
+            default: false
+        },
+        isDislikeClicked:{
+            type: Boolean,
+            default: false
+        },
         comments: {
             type: Array,
             default: function(){
                 return []
             }
-        }
-    },
-    data(){
-        return {
-            isLikeClicked: false,
-            isDisLikeClicked: false
         }
     },
     components: {
@@ -102,7 +105,7 @@ export default{
             return (this.isLikeClicked)? "#ffffff" : "#a0b0ba";
         },
         disLikeColor(){
-            return (this.isDisLikeClicked)? "#ffffff" : "#a0b0ba";
+            return (this.isDislikeClicked)? "#ffffff" : "#a0b0ba";
         }
     },
     methods: {
@@ -111,9 +114,19 @@ export default{
                     this.$emit('add-comment', comment);
             }
         },
-        incrementDislikes(){
-            this.isDisLikeClicked = true;
+        clickLike(){
+            this.$emit('increment-like');
+
+            if(this.isDislikeClicked){
+                this.$emit('decrement-dislike');
+            }
+        },
+        clickDislike(){
             this.$emit('increment-dislike');
+
+            if(this.isLikeClicked){
+                this.$emit('decrement-like');
+            }
         }
     }
 }
@@ -127,8 +140,8 @@ export default{
         justify-content:center;
         top: -25px;
         left: -25px;
-        width: 1024px;
-        height: 768px;
+        min-width: 1024px;
+        height: 100%;
         padding: 0;
         background: rgba(242,244,246,0.7);
 
