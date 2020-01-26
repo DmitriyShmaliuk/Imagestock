@@ -12,7 +12,7 @@
     "core-js": "^3.4.3",
     "vue": "^2.6.10",
     "vuetify": "^2.1.0",
-    "auxiliary-functions": "git+ssh://git@github.com:WilliaamKing/Auxiliary-functions.git#develop"
+    "auxiliary-functions": "git+ssh://git@github.com:WilliaamKing/Auxiliary-functions.git#0.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
