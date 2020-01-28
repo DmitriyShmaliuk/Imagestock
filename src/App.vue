@@ -38,6 +38,7 @@
 
 <script>
     import {store} from './store/store';
+    import {mapState, mapActions} from 'vuex';
     import addButton from "./components/add-button.vue";
     import imageSection from "./components/image-section.vue";
     import popup from "./components/popup.vue";
@@ -47,11 +48,13 @@
         store,
         data() {
             return {
-                images: [],
                 isPopupOpened: false,
                 countImagesSection: 1,
                 currentElement: null,
             }
+        },
+        computed:{
+            ...mapState(['images'])
         },
         created() {
             const IMAGES_STORE = localStorage.getItem("images-store");
@@ -60,7 +63,7 @@
                 const localeStore = JSON.parse(IMAGES_STORE);
 
                 Array.prototype.forEach.call(localeStore, (el)=>{
-                    this.images.push(el);
+                    this.add(el);
                 });
 
                 this.countImagesSection = Math.trunc(this.images.length / 9) + 1;
@@ -75,6 +78,7 @@
             popup
         },
         methods:{
+            ...mapActions(['add']),
             addImage(image){
                 this.images.push({src: image,
                                   style: {},
