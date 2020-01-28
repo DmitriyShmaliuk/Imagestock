@@ -5,16 +5,17 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state: {
-        images: []
+        images: [],
     },
     mutations: {
-        add(state, element){
+        addImage(state, element){
             state.images.push(element);
         }
     },
     actions: {
-        add({commit}, element){
-            commit('add', element);
+        addImage({state,commit}, element){
+            commit('addImage', element);
+            localStorage.setItem("images-store", JSON.stringify(state.images));
         }
     }
 });
