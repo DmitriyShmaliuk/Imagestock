@@ -22,7 +22,7 @@
                            @open-popup="openPopup">
             </image-section>
 
-            <add-button @add-image="addImage"></add-button>
+            <add-button @add-image="addImageSection"></add-button>
 
             <popup :isPopupOpened.sync="isPopupOpened"
                    v-bind.sync="images[currentElement]"
@@ -49,7 +49,7 @@
         data() {
             return {
                 isPopupOpened: false,
-                countImagesSection: 1,
+                countGridBlocks: 1,
                 currentElement: null,
             }
         },
@@ -63,13 +63,10 @@
                 const localeStore = JSON.parse(IMAGES_STORE);
 
                 Array.prototype.forEach.call(localeStore, (el)=>{
-                    this.add(el);
+                   this.addImage(el);
                 });
 
-                this.countImagesSection = Math.trunc(this.images.length / 9) + 1;
-            }
-            else{
-                this.images = [];
+                this.countGridBlocks = Math.trunc(this.images.length / 9) + 1;
             }
         },
         components: {
@@ -78,39 +75,40 @@
             popup
         },
         methods:{
-            ...mapActions(['add']),
-            addImage(image){
-                this.images.push({src: image,
-                                  style: {},
-                                  countOfLike: 0,
-                                  countOfDislike: 0,
-                                  isLikeClicked: false,
-                                  isDislikeClicked: false,
-                                  comments: [],
-                });
+            ...mapActions(['addImage']),
+            addImageSection(image){
+                let insertElement = {
+                  src: image,
+                  style: {},
+                  countOfLike: 0,
+                  countOfDislike: 0,
+                  isLikeClicked: false,
+                  isDislikeClicked: false,
+                  comments: [],
+                };
 
-                if (this.countImagesSection >= 2 ){
-                    let currentPosition = this.images.length - ((this.countImagesSection-1)*9);
+                if (this.countGridBlocks >= 2 ){
+                    let currentPosition = this.images.length - ((this.countGridBlocks-1)*9);
 
                     if (currentPosition === 1){
-                        this.images[this.images.length-1].style = {
-                            gridColumnStart: 5 * (this.countImagesSection - 1),
-                            gridColumnEnd: 5 * (this.countImagesSection - 1) + 2,
+                        insertElement.style = {
+                            gridColumnStart: 5 * (this.countGridBlocks - 1),
+                            gridColumnEnd: 5 * (this.countGridBlocks - 1) + 2,
                         }
                     }
                     else if (currentPosition === 5){
-                        this.images[this.images.length-1].style = {
-                            gridColumnStart: 6 * (this.countImagesSection - 1),
-                            gridColumnEnd: 6 * (this.countImagesSection - 1) + 2,
+                        insertElement.style = {
+                            gridColumnStart: 6 * (this.countGridBlocks - 1),
+                            gridColumnEnd: 6 * (this.countGridBlocks - 1) + 2,
                             gridRowStart: 3,
                             gridRowEnd: 4,
                         }
                     }
 
                     else if (currentPosition === 6){
-                        this.images[this.images.length-1].style = {
-                            gridColumnStart: 7 * (this.countImagesSection - 1),
-                            gridColumnEnd: 7 * (this.countImagesSection - 1),
+                        insertElement.style = {
+                            gridColumnStart: 7 * (this.countGridBlocks - 1),
+                            gridColumnEnd: 7 * (this.countGridBlocks - 1),
                             gridRowStart: 1,
                             gridRowEnd: 3,
                         }
@@ -118,10 +116,10 @@
                 }
 
                 if(this.images.length % 9 === 0){
-                    ++this.countImagesSection;
+                    ++this.countGridBlocks;
                 }
 
-                localStorage.setItem("images-store", JSON.stringify(this.images));
+                this.addImage(insertElement);
             },
             addComment({userName, userComment}){
                 this.images[this.currentElement].comments.push({
