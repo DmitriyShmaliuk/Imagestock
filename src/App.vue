@@ -37,12 +37,14 @@
 </template>
 
 <script>
+    import {store} from './store/store';
     import addButton from "./components/add-button.vue";
     import imageSection from "./components/image-section.vue";
     import popup from "./components/popup.vue";
 
     export default {
         name: 'app',
+        store,
         data() {
             return {
                 images: [],
