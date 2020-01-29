@@ -25,7 +25,7 @@
             <add-button @add-image="addImageSection"></add-button>
 
             <popup :isPopupOpened.sync="isPopupOpened"
-                   v-bind.sync="images[currentElement]"
+                   v-bind="images[currentIndex]"
                    @add-comment="addComment"
                    @increment-like="incrementLike"
                    @increment-dislike="incrementDislike"
@@ -50,11 +50,10 @@
             return {
                 isPopupOpened: false,
                 countGridBlocks: 1,
-                currentElement: null,
             }
         },
         computed:{
-            ...mapState(['images'])
+            ...mapState(['images','currentIndex'])
         },
         created() {
             const IMAGES_STORE = localStorage.getItem("images-store");
@@ -75,7 +74,7 @@
             popup
         },
         methods:{
-            ...mapActions(['addImage']),
+            ...mapActions(['addImage','setCurrentIndex']),
             addImageSection(image){
                 let insertElement = {
                   src: image,
@@ -187,7 +186,7 @@
                 localStorage.setItem("images-store", JSON.stringify(this.images));
             },
             openPopup(index){
-                this.currentElement = index;
+                this.setCurrentIndex(index);
                 this.isPopupOpened = true;
             }
         }
