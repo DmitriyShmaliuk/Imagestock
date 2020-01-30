@@ -15,10 +15,6 @@
                            :style="image.style"
                            :index="index"
                            :key="`image-${index}`"
-                           @increment-like="incrementLike"
-                           @increment-dislike="incrementDislike"
-                           @decrement-like="decrementLike"
-                           @decrement-dislike="decrementDislike"
                            @open-popup="openPopup">
             </image-section>
 
@@ -26,11 +22,7 @@
 
             <popup :isPopupOpened.sync="isPopupOpened"
                    v-bind="images[currentIndex]"
-                   @add-comment="addComment"
-                   @increment-like="incrementLike"
-                   @increment-dislike="incrementDislike"
-                   @decrement-like="decrementLike"
-                   @decrement-dislike="decrementDislike">
+                   @add-comment="addComment">
             </popup>
         </main>
     </v-app>
@@ -126,62 +118,6 @@
                         userComment,
                         date: new Date().toString()
                     });
-
-                localStorage.setItem("images-store", JSON.stringify(this.images));
-            },
-            incrementLike(index){
-                if (index !== undefined && !this.isPopupOpened){
-                    if(!this.images[index].isLikeClicked) {
-                        this.images[index].countOfLike++;
-                        this.images[index].isLikeClicked = true;
-                    }
-                }
-                else{
-                    if(!this.images[this.currentElement].isLikeClicked) {
-                        this.images[this.currentElement].countOfLike++;
-                        this.images[this.currentElement].isLikeClicked = true;
-                    }
-                }
-
-                localStorage.setItem("images-store", JSON.stringify(this.images));
-            },
-            incrementDislike(index){
-                if (index !== undefined && !this.isPopupOpened){
-                    if(!this.images[index].isDislikeClicked){
-                        this.images[index].countOfDislike++;
-                        this.images[index].isDislikeClicked = true;
-                    }
-                }
-                else{
-                    if(!this.images[this.currentElement].isDislikeClicked){
-                        this.images[this.currentElement].countOfDislike++;
-                        this.images[this.currentElement].isDislikeClicked = true;
-                    }
-                }
-
-                localStorage.setItem("images-store", JSON.stringify(this.images));
-            },
-            decrementLike(index){
-                if (index !== undefined && !this.isPopupOpened){
-                    this.images[index].countOfLike--;
-                    this.images[index].isLikeClicked = false;
-                }
-                else{
-                    this.images[this.currentElement].countOfLike--;
-                    this.images[this.currentElement].isLikeClicked = false;
-                }
-
-                localStorage.setItem("images-store", JSON.stringify(this.images));
-            },
-            decrementDislike(index){
-                if (index !== undefined && !this.isPopupOpened){
-                    this.images[index].countOfDislike--;
-                    this.images[index].isDislikeClicked = false;
-                }
-                else{
-                    this.images[this.currentElement].countOfDislike--;
-                    this.images[this.currentElement].isDislikeClicked = false;
-                }
 
                 localStorage.setItem("images-store", JSON.stringify(this.images));
             },
