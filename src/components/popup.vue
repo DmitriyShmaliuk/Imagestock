@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex';
 import defaultImage from '../assets/no-image.png';
 import commentsForm  from  './comment-form.vue';
 import commentSection from './comment-section';
@@ -109,24 +110,17 @@ export default{
         }
     },
     methods: {
+        ...mapActions(['incrementLikes', 'incrementDislikes']),
         addComment(comment){
             if(comment.userName && comment.userComment){
                     this.$emit('add-comment', comment);
             }
         },
         clickLike(){
-            this.$emit('increment-like');
-
-            if(this.isDislikeClicked){
-                this.$emit('decrement-dislike');
-            }
+            this.incrementLikes();
         },
         clickDislike(){
-            this.$emit('increment-dislike');
-
-            if(this.isLikeClicked){
-                this.$emit('decrement-like');
-            }
+           this.incrementDislikes();
         }
     }
 }
