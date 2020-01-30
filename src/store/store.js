@@ -26,6 +26,10 @@ export const store = new Vuex.Store({
         decrementLikes({images,currentIndex}){
             images[currentIndex].countOfLike--;
             images[currentIndex].isLikeClicked = false;
+        },
+        decrementDislikes({images, currentIndex}){
+            images[currentIndex].countOfDislike--;
+            images[currentIndex].isDislikeClicked = false;
         }
     },
     actions: {
@@ -40,6 +44,11 @@ export const store = new Vuex.Store({
             const {images,currentIndex} = state;
             if (!images[currentIndex].isLikeClicked){
                 commit('incrementLikes');
+
+                if(images[currentIndex].isDislikeClicked){
+                    commit('decrementDislikes')
+                }
+
                 localStorage.setItem("images-store", JSON.stringify(state.images));
             }
         },
@@ -48,8 +57,10 @@ export const store = new Vuex.Store({
             if(!images[currentIndex].isDislikeClicked){
                 commit('incrementDislikes');
 
-                if (images[currentIndex].isLikeClicked)
+                if (images[currentIndex].isLikeClicked){
                     commit('decrementLikes');
+                }
+
                 localStorage.setItem("images-store", JSON.stringify(state.images));
             }
         }
