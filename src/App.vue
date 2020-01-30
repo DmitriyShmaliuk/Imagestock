@@ -87,7 +87,7 @@
                 };
 
                 if (this.countGridBlocks >= 2 ){
-                    let currentPosition = this.images.length - ((this.countGridBlocks-1)*9);
+                    let currentPosition = (this.images.length + 1) - ((this.countGridBlocks-1)*9);
 
                     if (currentPosition === 1){
                         insertElement.style = {
@@ -114,11 +114,11 @@
                     }
                 }
 
+                this.addImage(insertElement);
+
                 if(this.images.length % 9 === 0){
                     ++this.countGridBlocks;
                 }
-
-                this.addImage(insertElement);
             },
             addComment({userName, userComment}){
                 this.images[this.currentElement].comments.push({
