@@ -10,65 +10,20 @@
                            :src="image.src"
                            :countOfLike="image.countOfLike"
                            :countOfDislike="image.countOfDislike"
+                           :isLikeClicked.sync="image.isLikeClicked"
+                           :isDislikeClicked.sync="image.isDislikeClicked"
                            :style="image.style"
                            :index="index"
                            :key="`image-${index}`"
-                           @open-popup="openPopup"
-                           @dislike="dislike"
-                           @like="like"
-                           @active-section="setCurrentIndex">
+                           @open-popup="openPopup">
             </image-section>
 
             <add-button @add-image="addImageSection"></add-button>
 
-            <popup :isPopupOpened.sync="isPopupOpened">
-                <v-container class="image-content">
-                    <v-container class="image-section">
-                        <v-img :src="currentObject.src"
-                                :height="550"
-                                width="auto"
-                                alt="no-image"></v-img>
-                    </v-container>
-
-                    <v-container class="reaction-section">
-                        <v-container class="dislike-icon"
-                                     :class="{active: currentObject.isDislikeClicked}"
-                                     @click="dislike">
-                            <v-icon :size="30"
-                                    :color="disLikeColor">mdi-thumb-down</v-icon>
-
-                            <div class="badge">
-                                {{this.currentObject.countOfDislike}}
-                            </div>
-                        </v-container>
-                        <v-container class="like-icon"
-                                     :class="{active: this.currentObject.isLikeClicked}"
-                                     @click="like">
-                            <v-icon :size="30"
-                                    :color="likeColor">mdi-thumb-up</v-icon>
-
-                            <div class="badge">
-                                {{currentObject.countOfLike}}
-                            </div>
-                        </v-container>
-                    </v-container>
-                </v-container>
-
-                 <v-container class="messages-content">
-                    <header>
-                        <h2>Comments: {{currentObject.comments && currentObject.comments.length}}</h2>
-                    </header>
-
-                    <article class="comments-section">
-                        <comment-section v-for="(comment,index) in currentObject.comments"
-                                         :user-name="comment.userName"
-                                         :comment="comment.userComment"
-                                         :date="comment.date"
-                                         :key="`comment-${index}`"></comment-section>
-                    </article>
-
-                    <comment-form @send-info="comment"></comment-form>
-                </v-container>
+            <popup :isPopupOpened.sync="isPopupOpened"
+                   :index="currentIndex"
+                   v-bind="images[currentIndex]"
+                   @add-comment="addComment">
             </popup>
         </main>
     </v-app>
@@ -79,20 +34,11 @@
     import {mapState, mapActions} from 'vuex';
     import addButton from "./components/add-button.vue";
     import imageSection from "./components/image-section.vue";
-    import commentSection from "./components/comment-section.vue";
-    import commentForm from "./components/comment-form.vue";
     import popup from "./components/popup.vue";
 
     export default {
         name: 'app',
         store,
-        components: {
-            addButton,
-            imageSection,
-            commentSection,
-            commentForm,
-            popup
-        },
         data() {
             return {
                 isPopupOpened: false,
@@ -101,16 +47,7 @@
             }
         },
         computed:{
-            ...mapState(['images']),
-            currentObject(){
-                return this.images[this.currentIndex] || {};
-            },
-            likeColor(){
-                return (this.currentObject.isLikeClicked)? "#ffffff" : "#a0b0ba";
-            },
-            disLikeColor(){
-                return (this.currentObject.isDislikeClicked)? "#ffffff" : "#a0b0ba";
-            }
+            ...mapState(['images'])
         },
         created() {
             const IMAGES_STORE = localStorage.getItem("images-store");
@@ -125,8 +62,13 @@
                 this.countGridBlocks = Math.trunc(this.images.length / 9) + 1;
             }
         },
+        components: {
+            addButton,
+            imageSection,
+            popup
+        },
         methods:{
-            ...mapActions(['addImage','setCurrentIndex', 'incrementLikes', 'incrementDislikes', 'addComment']),
+            ...mapActions(['addImage','setCurrentIndex']),
             addImageSection(image){
                 let insertElement = {
                   src: image,
@@ -172,28 +114,17 @@
                     ++this.countGridBlocks;
                 }
             },
-            comment({userName, userComment}){
-                const currentIndex = this.currentIndex;
-                const commentData = {
+            addComment({userName, userComment}){
+                this.images[this.currentElement].comments.push({
                         userName,
                         userComment,
                         date: new Date().toString()
-                    };
+                    });
 
-                this.addComment({index: currentIndex, commentData});
+                localStorage.setItem("images-store", JSON.stringify(this.images));
             },
-            like(){
-                this.incrementLikes(this.currentIndex);
-            },
-            dislike(){
-                this.incrementDislikes(this.currentIndex);
-            },
-            setCurrentIndex(index){
-                if (index >=0 && index < this.images.length){
-                    this.currentIndex = index;
-                }
-            },
-            openPopup(){
+            openPopup(index){
+                this.currentIndex = index;
                 this.isPopupOpened = true;
             }
         }
@@ -258,97 +189,6 @@
         grid-row-end: 3;
         grid-row-start: 4;
       }
-
-      .image-content{
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 450px;
-        padding: 0;
-
-        .image-section {
-            width: 100%;
-            height: 515px;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .reaction-section{
-                position: relative;
-                width: 100%;
-                height: 60px;
-                background-color: #f5f6f4;
-
-                .dislike-icon, .like-icon{
-                    position: absolute;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    top: -10px;
-                    width: 65px;
-                    height: 60px;
-                    background-color: #e0e5e9;
-
-                    &.active{
-                        transform: translateY(10px);
-                        background-color: #d02828;
-                    }
-
-                    .badge{
-                        position: absolute;
-                        right: 8px;
-                        top: 12px;
-                        width: 17px;
-                        height: 17px;
-                        text-align: center;
-                        vertical-align: middle;
-                        color: #308a93;
-                        font-size: 9px;
-                        border-radius: 50%;
-                        background-color: #ffffff;
-                        border: 2px solid #a1b1bb;
-                    }
-                }
-
-                .like-icon{
-                    right: 0;
-                }
-
-                .dislike-icon{
-                    right: 75px;
-                }
-            }
-        }
-
-        .messages-content{
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 320px;
-
-            &::v-deep .comment-form{
-                margin-top: 10px;
-            }
-
-            header{
-                h2{
-                    font-family: "Roboto", sans-serif;
-                    font-size: 24px;
-                    color: #8499a7;
-                }
-            }
-
-            .comments-section{
-                width: 300px;
-                height: 410px;
-                padding-right: 20px;
-                overflow: auto;
-
-                &::-webkit-scrollbar{
-                    width: 7px;
-                }
-            }
-        }
     }
 </style>
 
