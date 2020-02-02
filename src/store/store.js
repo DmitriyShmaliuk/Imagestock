@@ -6,30 +6,26 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         images: [],
-        currentIndex: null,
     },
     mutations: {
         addImage({images}, element){
             images.push(element);
         },
-        setCurrentIndex(state, index){
-            state.currentIndex = (index >=0 && index < state.images.length)? index: state.currentIndex;
+        incrementLikes({images},index){
+            images[index].countOfLike++;
+            images[index].isLikeClicked = true;
         },
-        incrementLikes({images,currentIndex}){
-            images[currentIndex].countOfLike++;
-            images[currentIndex].isLikeClicked = true;
+        incrementDislikes({images}, index){
+            images[index].countOfDislike++;
+            images[index].isDislikeClicked = true;
         },
-        incrementDislikes({images,currentIndex}){
-            images[currentIndex].countOfDislike++;
-            images[currentIndex].isDislikeClicked = true;
+        decrementLikes({images}, index){
+            images[index].countOfLike--;
+            images[index].isLikeClicked = false;
         },
-        decrementLikes({images,currentIndex}){
-            images[currentIndex].countOfLike--;
-            images[currentIndex].isLikeClicked = false;
-        },
-        decrementDislikes({images, currentIndex}){
-            images[currentIndex].countOfDislike--;
-            images[currentIndex].isDislikeClicked = false;
+        decrementDislikes({images}, index){
+            images[index].countOfDislike--;
+            images[index].isDislikeClicked = false;
         }
     },
     actions: {
@@ -37,28 +33,25 @@ export const store = new Vuex.Store({
             commit('addImage', element);
             localStorage.setItem("images-store", JSON.stringify(state.images));
         },
-        setCurrentIndex({commit}, index){
-            commit('setCurrentIndex', index);
-        },
-        incrementLikes({state,commit}){
-            const {images,currentIndex} = state;
-            if (!images[currentIndex].isLikeClicked){
-                commit('incrementLikes');
+        incrementLikes({state,commit}, index){
+            const {images} = state;
+            if (!images[index].isLikeClicked){
+                commit('incrementLikes', index);
 
-                if(images[currentIndex].isDislikeClicked){
-                    commit('decrementDislikes')
+                if(images[index].isDislikeClicked){
+                    commit('decrementDislikes', index)
                 }
 
                 localStorage.setItem("images-store", JSON.stringify(state.images));
             }
         },
-        incrementDislikes({state,commit}){
-            const {images,currentIndex} = state;
-            if(!images[currentIndex].isDislikeClicked){
-                commit('incrementDislikes');
+        incrementDislikes({state,commit}, index){
+            const {images} = state;
+            if(!images[index].isDislikeClicked){
+                commit('incrementDislikes', index);
 
-                if (images[currentIndex].isLikeClicked){
-                    commit('decrementLikes');
+                if (images[index].isLikeClicked){
+                    commit('decrementLikes', index);
                 }
 
                 localStorage.setItem("images-store", JSON.stringify(state.images));
