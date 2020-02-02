@@ -46,6 +46,7 @@ export default{
             margin-top: 11px;
             width: 225px;
             height: 50px;
+            resize: none;
             border-radius: 3px;
             border: 1px solid #a0b0ba;
 
