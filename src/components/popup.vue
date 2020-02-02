@@ -1,6 +1,6 @@
 <template>
-    <v-container class="background" v-if="isPopupOpened">
-        <v-container class="popup">
+    <v-container class="popup" v-if="isPopupOpened">
+        <v-container class="popup-content">
             <v-container class="close-icon"
                          @click="$emit('update:isPopupOpened', false)">
                 <v-icon color="#21b8c6" :size="35">mdi-close</v-icon>
@@ -127,7 +127,7 @@ export default{
 </script>
 
 <style lang="scss" scoped>
-    .background{
+    .popup{
         position: absolute;
         display: flex;
         align-items:  center;
@@ -135,11 +135,11 @@ export default{
         top: -25px;
         left: -25px;
         min-width: 1024px;
-        height: 100%;
+        height: 768px;
         padding: 0;
         background: rgba(242,244,246,0.7);
 
-        .popup{
+        .popup-content{
             position: relative;
             width: 810px;
             height: 595px;
