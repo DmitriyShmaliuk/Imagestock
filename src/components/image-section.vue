@@ -1,7 +1,7 @@
 <template>
    <section class="grid-section image-section"
             :style="{'background': `url(${src})`}"
-            @mouseover="openReactionSection"
+            @mouseover="isReactionSectionOpen = !isReactionSectionOpen"
             @mouseout="isReactionSectionOpen = !isReactionSectionOpen">
       <v-container class="reaction" :class="{active: isReactionSectionOpen}">
          <figure class="dislike-icon"
@@ -77,14 +77,10 @@ export default{
    methods:{
        ...mapActions(['incrementLikes', 'incrementDislikes','setCurrentIndex']),
        clickLike(){
-          this.incrementLikes();
+          this.incrementLikes(this.index);
        },
       clickDislike(){
-         this.incrementDislikes();
-      },
-      openReactionSection(){
-         this.setCurrentIndex(this.index);
-         this.isReactionSectionOpen = !this.isReactionSectionOpen;
+         this.incrementDislikes(this.index);
       }
    }
 }
