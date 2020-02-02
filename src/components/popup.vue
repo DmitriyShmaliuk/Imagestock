@@ -1,60 +1,62 @@
 <template>
-    <v-container class="popup" v-if="isPopupOpened">
-        <v-container class="popup-content">
-            <v-container class="close-icon"
-                         @click="$emit('update:isPopupOpened', false)">
-                <v-icon color="#21b8c6" :size="35">mdi-close</v-icon>
-            </v-container>
-
-            <v-container class="image-content">
-                <v-container class="image-section">
-                    <v-img :src="src"
-                            :height="550"
-                            width="auto"
-                            alt="no-image"></v-img>
+    <transition name="fade">
+        <v-container class="popup" v-if="isPopupOpened">
+            <v-container class="popup-content">
+                <v-container class="close-icon"
+                             @click="$emit('update:isPopupOpened', false)">
+                    <v-icon color="#21b8c6" :size="35">mdi-close</v-icon>
                 </v-container>
 
-                <v-container class="reaction-section">
-                    <v-container class="dislike-icon"
-                                 :class="{active: isDislikeClicked}"
-                                 @click="clickDislike">
-                        <v-icon :size="30"
-                                :color="disLikeColor">mdi-thumb-down</v-icon>
-
-                        <div class="badge">
-                            {{countOfDislike}}
-                        </div>
+                <v-container class="image-content">
+                    <v-container class="image-section">
+                        <v-img :src="src"
+                               :height="550"
+                               width="auto"
+                               alt="no-image"></v-img>
                     </v-container>
-                    <v-container class="like-icon"
-                                 :class="{active: isLikeClicked}"
-                                 @click="clickLike">
-                        <v-icon :size="30"
-                                :color="likeColor">mdi-thumb-up</v-icon>
 
-                        <div class="badge">
-                            {{countOfLike}}
-                        </div>
+                    <v-container class="reaction-section">
+                        <v-container class="dislike-icon"
+                                     :class="{active: isDislikeClicked}"
+                                     @click="clickDislike">
+                            <v-icon :size="30"
+                                    :color="disLikeColor">mdi-thumb-down</v-icon>
+
+                            <div class="badge">
+                                {{countOfDislike}}
+                            </div>
+                        </v-container>
+                        <v-container class="like-icon"
+                                     :class="{active: isLikeClicked}"
+                                     @click="clickLike">
+                            <v-icon :size="30"
+                                    :color="likeColor">mdi-thumb-up</v-icon>
+
+                            <div class="badge">
+                                {{countOfLike}}
+                            </div>
+                        </v-container>
                     </v-container>
                 </v-container>
-            </v-container>
 
-            <v-container class="messages-content">
-                <header>
-                    <h2>Comments: {{comments.length}}</h2>
-                </header>
+                <v-container class="messages-content">
+                    <header>
+                        <h2>Comments: {{comments.length}}</h2>
+                    </header>
 
-                <article class="comments-section">
-                    <comment-section v-for="(comment,index) in comments"
-                                     :user-name="comment.userName"
-                                     :comment="comment.userComment"
-                                     :date="comment.date"
-                                     :key="`comment-${index}`"></comment-section>
-                </article>
+                    <article class="comments-section">
+                        <comment-section v-for="(comment,index) in comments"
+                                         :user-name="comment.userName"
+                                         :comment="comment.userComment"
+                                         :date="comment.date"
+                                         :key="`comment-${index}`"></comment-section>
+                    </article>
 
-                <comments-form @send-info="addComment"></comments-form>
+                    <comments-form @send-info="addComment"></comments-form>
+                </v-container>
             </v-container>
         </v-container>
-    </v-container>
+    </transition>
 </template>
 
 <script>
@@ -246,5 +248,12 @@ export default{
                 }
             }
         }
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
     }
 </style>
