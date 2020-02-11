@@ -6,8 +6,6 @@
                              @click="$emit('update:isPopupOpened', false)">
                     <v-icon color="#21b8c6" :size="35">mdi-close</v-icon>
                 </v-container>
-
-                <slot></slot>
             </v-container>
         </v-container>
     </transition>
