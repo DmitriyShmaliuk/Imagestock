@@ -47,10 +47,26 @@
                                     :color="likeColor">mdi-thumb-up</v-icon>
 
                             <div class="badge">
-                                {{this.currentObject.countOfLike}}
+                                {{currentObject.countOfLike}}
                             </div>
                         </v-container>
                     </v-container>
+                </v-container>
+
+                 <v-container class="messages-content">
+                    <header>
+                        <h2>Comments: {{currentObject.comments && currentObject.comments.length}}</h2>
+                    </header>
+
+                    <article class="comments-section">
+                        <comment-section v-for="(comment,index) in currentObject.comments"
+                                         :user-name="comment.userName"
+                                         :comment="comment.userComment"
+                                         :date="comment.date"
+                                         :key="`comment-${index}`"></comment-section>
+                    </article>
+
+                    <comment-form @send-info="addComment"></comment-form>
                 </v-container>
             </popup>
         </main>
@@ -62,11 +78,20 @@
     import {mapState, mapActions} from 'vuex';
     import addButton from "./components/add-button.vue";
     import imageSection from "./components/image-section.vue";
+    import commentSection from "./components/comment-section.vue";
+    import commentForm from "./components/comment-form.vue";
     import popup from "./components/popup.vue";
 
     export default {
         name: 'app',
         store,
+        components: {
+            addButton,
+            imageSection,
+            commentSection,
+            commentForm,
+            popup
+        },
         data() {
             return {
                 isPopupOpened: false,
@@ -86,11 +111,6 @@
                 return (this.currentObject.isDislikeClicked)? "#ffffff" : "#a0b0ba";
             }
         },
-        watch:{
-            currentObject(){
-                console.log(this.currentObject);
-            }
-        },
         created() {
             const IMAGES_STORE = localStorage.getItem("images-store");
 
@@ -103,11 +123,6 @@
 
                 this.countGridBlocks = Math.trunc(this.images.length / 9) + 1;
             }
-        },
-        components: {
-            addButton,
-            imageSection,
-            popup
         },
         methods:{
             ...mapActions(['addImage','setCurrentIndex', 'incrementLikes', 'incrementDislikes']),
