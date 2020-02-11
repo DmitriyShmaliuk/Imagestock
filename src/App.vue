@@ -20,10 +20,36 @@
 
             <add-button @add-image="addImageSection"></add-button>
 
-            <popup :isPopupOpened.sync="isPopupOpened"
-                   :index="currentIndex"
-                   v-bind="images[currentIndex]"
-                   @add-comment="addComment">
+            <popup :isPopupOpened.sync="isPopupOpened">
+                <v-container class="image-content">
+                    <v-container class="image-section">
+                        <v-img :src="currentObject.src"
+                                :height="550"
+                                width="auto"
+                                alt="no-image"></v-img>
+                    </v-container>
+
+                    <v-container class="reaction-section">
+                        <v-container class="dislike-icon"
+                                     :class="{active: currentObject.isDislikeClicked}">
+                            <v-icon :size="30"
+                                    :color="disLikeColor">mdi-thumb-down</v-icon>
+
+                            <div class="badge">
+                                {{this.currentObject.countOfDislike}}
+                            </div>
+                        </v-container>
+                        <v-container class="like-icon"
+                                     :class="{active: this.currentObject.isLikeClicked}">
+                            <v-icon :size="30"
+                                    :color="likeColor">mdi-thumb-up</v-icon>
+
+                            <div class="badge">
+                                {{this.currentObject.countOfLike}}
+                            </div>
+                        </v-container>
+                    </v-container>
+                </v-container>
             </popup>
         </main>
     </v-app>
@@ -47,7 +73,21 @@
             }
         },
         computed:{
-            ...mapState(['images'])
+            ...mapState(['images']),
+            currentObject(){
+                return this.images[this.currentIndex] || {};
+            },
+            likeColor(){
+                return (this.currentObject.isLikeClicked)? "#ffffff" : "#a0b0ba";
+            },
+            disLikeColor(){
+                return (this.currentObject.isDislikeClicked)? "#ffffff" : "#a0b0ba";
+            }
+        },
+        watch:{
+            currentObject(){
+                console.log(this.currentObject);
+            }
         },
         created() {
             const IMAGES_STORE = localStorage.getItem("images-store");
@@ -189,6 +229,97 @@
         grid-row-end: 3;
         grid-row-start: 4;
       }
+
+      .image-content{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 450px;
+        padding: 0;
+
+        .image-section {
+            width: 100%;
+            height: 515px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .reaction-section{
+                position: relative;
+                width: 100%;
+                height: 60px;
+                background-color: #f5f6f4;
+
+                .dislike-icon, .like-icon{
+                    position: absolute;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    top: -10px;
+                    width: 65px;
+                    height: 60px;
+                    background-color: #e0e5e9;
+
+                    &.active{
+                        transform: translateY(10px);
+                        background-color: #d02828;
+                    }
+
+                    .badge{
+                        position: absolute;
+                        right: 8px;
+                        top: 12px;
+                        width: 17px;
+                        height: 17px;
+                        text-align: center;
+                        vertical-align: middle;
+                        color: #308a93;
+                        font-size: 9px;
+                        border-radius: 50%;
+                        background-color: #ffffff;
+                        border: 2px solid #a1b1bb;
+                    }
+                }
+
+                .like-icon{
+                    right: 0;
+                }
+
+                .dislike-icon{
+                    right: 75px;
+                }
+            }
+        }
+
+        .messages-content{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 320px;
+
+            &::v-deep .comment-form{
+                margin-top: 10px;
+            }
+
+            header{
+                h2{
+                    font-family: "Roboto", sans-serif;
+                    font-size: 24px;
+                    color: #8499a7;
+                }
+            }
+
+            .comments-section{
+                width: 300px;
+                height: 410px;
+                padding-right: 20px;
+                overflow: auto;
+
+                &::-webkit-scrollbar{
+                    width: 7px;
+                }
+            }
+        }
     }
 </style>
 
