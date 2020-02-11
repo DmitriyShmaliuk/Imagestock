@@ -31,7 +31,8 @@
 
                     <v-container class="reaction-section">
                         <v-container class="dislike-icon"
-                                     :class="{active: currentObject.isDislikeClicked}">
+                                     :class="{active: currentObject.isDislikeClicked}"
+                                     @click="dislike">
                             <v-icon :size="30"
                                     :color="disLikeColor">mdi-thumb-down</v-icon>
 
@@ -40,7 +41,8 @@
                             </div>
                         </v-container>
                         <v-container class="like-icon"
-                                     :class="{active: this.currentObject.isLikeClicked}">
+                                     :class="{active: this.currentObject.isLikeClicked}"
+                                     @click="like">
                             <v-icon :size="30"
                                     :color="likeColor">mdi-thumb-up</v-icon>
 
@@ -108,7 +110,7 @@
             popup
         },
         methods:{
-            ...mapActions(['addImage','setCurrentIndex']),
+            ...mapActions(['addImage','setCurrentIndex', 'incrementLikes', 'incrementDislikes']),
             addImageSection(image){
                 let insertElement = {
                   src: image,
@@ -162,6 +164,12 @@
                     });
 
                 localStorage.setItem("images-store", JSON.stringify(this.images));
+            },
+            like(){
+                this.incrementLikes(this.currentIndex);
+            },
+            dislike(){
+                this.incrementDislikes(this.currentIndex);
             },
             openPopup(index){
                 this.currentIndex = index;
