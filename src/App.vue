@@ -66,7 +66,7 @@
                                          :key="`comment-${index}`"></comment-section>
                     </article>
 
-                    <comment-form @send-info="addComment"></comment-form>
+                    <comment-form @send-info="comment"></comment-form>
                 </v-container>
             </popup>
         </main>
@@ -125,7 +125,7 @@
             }
         },
         methods:{
-            ...mapActions(['addImage','setCurrentIndex', 'incrementLikes', 'incrementDislikes']),
+            ...mapActions(['addImage','setCurrentIndex', 'incrementLikes', 'incrementDislikes', 'addComment']),
             addImageSection(image){
                 let insertElement = {
                   src: image,
@@ -171,14 +171,15 @@
                     ++this.countGridBlocks;
                 }
             },
-            addComment({userName, userComment}){
-                this.images[this.currentElement].comments.push({
+            comment({userName, userComment}){
+                const currentIndex = this.currentIndex;
+                const commentData = {
                         userName,
                         userComment,
                         date: new Date().toString()
-                    });
+                    };
 
-                localStorage.setItem("images-store", JSON.stringify(this.images));
+                this.addComment({index: currentIndex, commentData});
             },
             like(){
                 this.incrementLikes(this.currentIndex);
