@@ -26,6 +26,9 @@ export const store = new Vuex.Store({
         decrementDislikes({images}, index){
             images[index].countOfDislike--;
             images[index].isDislikeClicked = false;
+        },
+        addComment({images}, {index, commentData}){
+            images[index].comments.push(commentData);
         }
     },
     actions: {
@@ -56,6 +59,10 @@ export const store = new Vuex.Store({
 
                 localStorage.setItem("images-store", JSON.stringify(state.images));
             }
+        },
+        addComment({state,commit},{index, commentData}){
+            commit('addComment', {index, commentData});
+            localStorage.setItem("images-store", JSON.stringify(state.images));
         }
     }
 });
