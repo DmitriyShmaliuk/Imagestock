@@ -23,9 +23,10 @@ export default{
     },
     methods:{
         sendInformation(){
-            this.$emit('send-info', {userName: this.userName, userComment: this.userComment});
-            this.userName = "";
-            this.userComment = "";
+            if (this.userName.length >= 2 && this.userComment.length >= 3){
+                this.$emit('send-info', {userName: this.userName, userComment: this.userComment});
+                this.userName = this.userComment = "";
+            }
         }
     }
 }
