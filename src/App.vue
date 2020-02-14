@@ -10,15 +10,13 @@
                            :src="image.src"
                            :countOfLike="image.countOfLike"
                            :countOfDislike="image.countOfDislike"
-                           :isLikeClicked.sync="image.isLikeClicked"
-                           :isDislikeClicked.sync="image.isDislikeClicked"
                            :style="image.style"
                            :index="index"
                            :key="`image-${index}`"
                            @open-popup="openPopup"
                            @dislike="dislike"
                            @like="like"
-                          >
+                           @active-section="setCurrentIndex">
             </image-section>
 
             <add-button @add-image="addImageSection"></add-button>
@@ -190,8 +188,12 @@
             dislike(){
                 this.incrementDislikes(this.currentIndex);
             },
-            openPopup(index){
-                this.currentIndex = index;
+            setCurrentIndex(index){
+                if (index >=0 && index < this.images.length){
+                    this.currentIndex = index;
+                }
+            },
+            openPopup(){
                 this.isPopupOpened = true;
             }
         }
