@@ -15,7 +15,10 @@
                            :style="image.style"
                            :index="index"
                            :key="`image-${index}`"
-                           @open-popup="openPopup">
+                           @open-popup="openPopup"
+                           @dislike="dislike"
+                           @like="like"
+                          >
             </image-section>
 
             <add-button @add-image="addImageSection"></add-button>
