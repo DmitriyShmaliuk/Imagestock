@@ -23,9 +23,10 @@ export default{
     },
     methods:{
         sendInformation(){
-            this.$emit('send-info', {userName: this.userName, userComment: this.userComment});
-            this.userName = "";
-            this.userComment = "";
+            if (this.userName.length >= 2 && this.userComment.length >= 3){
+                this.$emit('send-info', {userName: this.userName, userComment: this.userComment});
+                this.userName = this.userComment = "";
+            }
         }
     }
 }
@@ -46,6 +47,7 @@ export default{
             margin-top: 11px;
             width: 225px;
             height: 50px;
+            resize: none;
             border-radius: 3px;
             border: 1px solid #a0b0ba;
 
