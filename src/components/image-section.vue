@@ -77,10 +77,10 @@ export default{
    methods:{
        ...mapActions(['incrementLikes', 'incrementDislikes','setCurrentIndex']),
        clickLike(){
-          this.incrementLikes(this.index);
+         this.$emit("like");
        },
       clickDislike(){
-         this.incrementDislikes(this.index);
+         this.$emit("dislike");
       }
    }
 }
