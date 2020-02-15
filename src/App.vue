@@ -10,45 +10,106 @@
                            :src="image.src"
                            :countOfLike="image.countOfLike"
                            :countOfDislike="image.countOfDislike"
-                           :isLikeClicked.sync="image.isLikeClicked"
-                           :isDislikeClicked.sync="image.isDislikeClicked"
                            :style="image.style"
                            :index="index"
                            :key="`image-${index}`"
-                           @increment-like="incrementLike"
-                           @increment-dislike="incrementDislike"
-                           @decrement-like="decrementLike"
-                           @decrement-dislike="decrementDislike"
-                           @open-popup="openPopup">
+                           @open-popup="openPopup"
+                           @dislike="dislike"
+                           @like="like"
+                           @active-section="setCurrentIndex">
             </image-section>
 
-            <add-button @add-image="addImage"></add-button>
+            <add-button @add-image="addImageSection"></add-button>
 
-            <popup :isPopupOpened.sync="isPopupOpened"
-                   v-bind.sync="images[currentElement]"
-                   @add-comment="addComment"
-                   @increment-like="incrementLike"
-                   @increment-dislike="incrementDislike"
-                   @decrement-like="decrementLike"
-                   @decrement-dislike="decrementDislike">
+            <popup :isPopupOpened.sync="isPopupOpened">
+                <v-container class="image-content">
+                    <v-container class="image-section">
+                        <v-img :src="currentObject.src"
+                                :height="550"
+                                width="auto"
+                                alt="no-image"></v-img>
+                    </v-container>
+
+                    <v-container class="reaction-section">
+                        <v-container class="dislike-icon"
+                                     :class="{active: currentObject.isDislikeClicked}"
+                                     @click="dislike">
+                            <v-icon :size="30"
+                                    :color="disLikeColor">mdi-thumb-down</v-icon>
+
+                            <div class="badge">
+                                {{this.currentObject.countOfDislike}}
+                            </div>
+                        </v-container>
+                        <v-container class="like-icon"
+                                     :class="{active: this.currentObject.isLikeClicked}"
+                                     @click="like">
+                            <v-icon :size="30"
+                                    :color="likeColor">mdi-thumb-up</v-icon>
+
+                            <div class="badge">
+                                {{currentObject.countOfLike}}
+                            </div>
+                        </v-container>
+                    </v-container>
+                </v-container>
+
+                 <v-container class="messages-content">
+                    <header>
+                        <h2>Comments: {{currentObject.comments && currentObject.comments.length}}</h2>
+                    </header>
+
+                    <article class="comments-section">
+                        <comment-section v-for="(comment,index) in currentObject.comments"
+                                         :user-name="comment.userName"
+                                         :comment="comment.userComment"
+                                         :date="comment.date"
+                                         :key="`comment-${index}`"></comment-section>
+                    </article>
+
+                    <comment-form @send-info="comment"></comment-form>
+                </v-container>
             </popup>
         </main>
     </v-app>
 </template>
 
 <script>
+    import {store} from './store/store';
+    import {mapState, mapActions} from 'vuex';
     import addButton from "./components/add-button.vue";
     import imageSection from "./components/image-section.vue";
+    import commentSection from "./components/comment-section.vue";
+    import commentForm from "./components/comment-form.vue";
     import popup from "./components/popup.vue";
 
     export default {
         name: 'app',
+        store,
+        components: {
+            addButton,
+            imageSection,
+            commentSection,
+            commentForm,
+            popup
+        },
         data() {
             return {
-                images: [],
                 isPopupOpened: false,
-                countImagesSection: 1,
-                currentElement: null,
+                currentIndex: null,
+                countGridBlocks: 1,
+            }
+        },
+        computed:{
+            ...mapState(['images']),
+            currentObject(){
+                return this.images[this.currentIndex] || {};
+            },
+            likeColor(){
+                return (this.currentObject.isLikeClicked)? "#ffffff" : "#a0b0ba";
+            },
+            disLikeColor(){
+                return (this.currentObject.isDislikeClicked)? "#ffffff" : "#a0b0ba";
             }
         },
         created() {
@@ -58,132 +119,81 @@
                 const localeStore = JSON.parse(IMAGES_STORE);
 
                 Array.prototype.forEach.call(localeStore, (el)=>{
-                    this.images.push(el);
+                   this.addImage(el);
                 });
 
-                this.countImagesSection = Math.trunc(this.images.length / 9) + 1;
+                this.countGridBlocks = Math.trunc(this.images.length / 9) + 1;
             }
-            else{
-                this.images = [];
-            }
-        },
-        components: {
-            addButton,
-            imageSection,
-            popup
         },
         methods:{
-            addImage(image){
-                this.images.push({src: image,
-                                  style: {},
-                                  countOfLike: 0,
-                                  countOfDislike: 0,
-                                  isLikeClicked: false,
-                                  isDislikeClicked: false,
-                                  comments: [],
-                });
+            ...mapActions(['addImage','setCurrentIndex', 'incrementLikes', 'incrementDislikes', 'addComment']),
+            addImageSection(image){
+                let insertElement = {
+                  src: image,
+                  style: {},
+                  countOfLike: 0,
+                  countOfDislike: 0,
+                  isLikeClicked: false,
+                  isDislikeClicked: false,
+                  comments: [],
+                };
 
-                if (this.countImagesSection >= 2 ){
-                    let currentPosition = this.images.length - ((this.countImagesSection-1)*9);
+                if (this.countGridBlocks >= 2 ){
+                    let currentPosition = (this.images.length + 1) - ((this.countGridBlocks-1)*9);
 
                     if (currentPosition === 1){
-                        this.images[this.images.length-1].style = {
-                            gridColumnStart: 5 * (this.countImagesSection - 1),
-                            gridColumnEnd: 5 * (this.countImagesSection - 1) + 2,
+                        insertElement.style = {
+                            gridColumnStart: 5 * (this.countGridBlocks - 1),
+                            gridColumnEnd: 5 * (this.countGridBlocks - 1) + 2,
                         }
                     }
                     else if (currentPosition === 5){
-                        this.images[this.images.length-1].style = {
-                            gridColumnStart: 6 * (this.countImagesSection - 1),
-                            gridColumnEnd: 6 * (this.countImagesSection - 1) + 2,
+                        insertElement.style = {
+                            gridColumnStart: 6 * (this.countGridBlocks - 1),
+                            gridColumnEnd: 6 * (this.countGridBlocks - 1) + 2,
                             gridRowStart: 3,
                             gridRowEnd: 4,
                         }
                     }
 
                     else if (currentPosition === 6){
-                        this.images[this.images.length-1].style = {
-                            gridColumnStart: 7 * (this.countImagesSection - 1),
-                            gridColumnEnd: 7 * (this.countImagesSection - 1),
+                        insertElement.style = {
+                            gridColumnStart: 7 * (this.countGridBlocks - 1),
+                            gridColumnEnd: 7 * (this.countGridBlocks - 1),
                             gridRowStart: 1,
                             gridRowEnd: 3,
                         }
                     }
                 }
 
-                if(this.images.length % 9 === 0){
-                    ++this.countImagesSection;
-                }
+                this.addImage(insertElement);
 
-                localStorage.setItem("images-store", JSON.stringify(this.images));
+                if(this.images.length % 9 === 0){
+                    ++this.countGridBlocks;
+                }
             },
-            addComment({userName, userComment}){
-                this.images[this.currentElement].comments.push({
+            comment({userName, userComment}){
+                const currentIndex = this.currentIndex;
+                const commentData = {
                         userName,
                         userComment,
                         date: new Date().toString()
-                    });
+                    };
 
-                localStorage.setItem("images-store", JSON.stringify(this.images));
+                this.addComment({index: currentIndex, commentData});
             },
-            incrementLike(index){
-                if (index !== undefined && !this.isPopupOpened){
-                    if(!this.images[index].isLikeClicked) {
-                        this.images[index].countOfLike++;
-                        this.images[index].isLikeClicked = true;
-                    }
-                }
-                else{
-                    if(!this.images[this.currentElement].isLikeClicked) {
-                        this.images[this.currentElement].countOfLike++;
-                        this.images[this.currentElement].isLikeClicked = true;
-                    }
-                }
-
-                localStorage.setItem("images-store", JSON.stringify(this.images));
+            like(){
+                this.incrementLikes(this.currentIndex);
             },
-            incrementDislike(index){
-                if (index !== undefined && !this.isPopupOpened){
-                    if(!this.images[index].isDislikeClicked){
-                        this.images[index].countOfDislike++;
-                        this.images[index].isDislikeClicked = true;
-                    }
-                }
-                else{
-                    if(!this.images[this.currentElement].isDislikeClicked){
-                        this.images[this.currentElement].countOfDislike++;
-                        this.images[this.currentElement].isDislikeClicked = true;
-                    }
-                }
-
-                localStorage.setItem("images-store", JSON.stringify(this.images));
+            dislike(){
+                this.incrementDislikes(this.currentIndex);
             },
-            decrementLike(index){
-                if (index !== undefined && !this.isPopupOpened){
-                    this.images[index].countOfLike--;
-                    this.images[index].isLikeClicked = false;
+            setCurrentIndex(index){
+                if (index >=0 && index < this.images.length){
+                    this.currentIndex = index;
                 }
-                else{
-                    this.images[this.currentElement].countOfLike--;
-                    this.images[this.currentElement].isLikeClicked = false;
-                }
-
-                localStorage.setItem("images-store", JSON.stringify(this.images));
             },
-            decrementDislike(index){
-                if (index !== undefined && !this.isPopupOpened){
-                    this.images[index].countOfDislike--;
-                    this.images[index].isDislikeClicked = false;
-                }
-                else{
-                    this.images[this.currentElement].countOfDislike--;
-                    this.images[this.currentElement].isDislikeClicked = false;
-                }
-
-                localStorage.setItem("images-store", JSON.stringify(this.images));
-            },
-            openPopup(index){
-                this.currentElement = index;
+            openPopup(){
                 this.isPopupOpened = true;
             }
         }
@@ -248,6 +258,97 @@
         grid-row-end: 3;
         grid-row-start: 4;
       }
+
+      .image-content{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 450px;
+        padding: 0;
+
+        .image-section {
+            width: 100%;
+            height: 515px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .reaction-section{
+                position: relative;
+                width: 100%;
+                height: 60px;
+                background-color: #f5f6f4;
+
+                .dislike-icon, .like-icon{
+                    position: absolute;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    top: -10px;
+                    width: 65px;
+                    height: 60px;
+                    background-color: #e0e5e9;
+
+                    &.active{
+                        transform: translateY(10px);
+                        background-color: #d02828;
+                    }
+
+                    .badge{
+                        position: absolute;
+                        right: 8px;
+                        top: 12px;
+                        width: 17px;
+                        height: 17px;
+                        text-align: center;
+                        vertical-align: middle;
+                        color: #308a93;
+                        font-size: 9px;
+                        border-radius: 50%;
+                        background-color: #ffffff;
+                        border: 2px solid #a1b1bb;
+                    }
+                }
+
+                .like-icon{
+                    right: 0;
+                }
+
+                .dislike-icon{
+                    right: 75px;
+                }
+            }
+        }
+
+        .messages-content{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 320px;
+
+            &::v-deep .comment-form{
+                margin-top: 10px;
+            }
+
+            header{
+                h2{
+                    font-family: "Roboto", sans-serif;
+                    font-size: 24px;
+                    color: #8499a7;
+                }
+            }
+
+            .comments-section{
+                width: 300px;
+                height: 410px;
+                padding-right: 20px;
+                overflow: auto;
+
+                &::-webkit-scrollbar{
+                    width: 7px;
+                }
+            }
+        }
     }
 </style>
 

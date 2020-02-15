@@ -28,7 +28,7 @@
 
                 reader.onloadend = () => {
                     this.$emit('add-image', reader.result);
-                }
+                };
 
                 if (target.files[0]) {
                     reader.readAsDataURL(target.files[0]);
