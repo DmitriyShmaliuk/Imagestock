@@ -1,7 +1,7 @@
 <template>
     <v-container class="comment-section">
         <v-container class="information">
-            <p>By {{userName}}</p>
+            <p>By {{userNameString}}</p>
             <p>{{commentDate}}</p>
         </v-container>
 
@@ -19,6 +19,9 @@ export default {
     computed: {
         commentDate(){
             return getDateString(new Date(this.date));
+        },
+        userNameString(){
+            return this.userName.slice(0,20);
         }
     },
     props: {
