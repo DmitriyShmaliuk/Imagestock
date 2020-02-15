@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { ADD_IMAGE,INCREMENT_LIKES,INCREMENT_DISLIKES,DECREMENT_LIKES,
+        DECREMENT_DISLIKES,ADD_COMMENT } from './mutation-types';
 
 Vue.use(Vuex);
 
@@ -8,41 +10,41 @@ export const store = new Vuex.Store({
         images: [],
     },
     mutations: {
-        addImage({images}, element){
+        [ADD_IMAGE]({images}, element){
             images.push(element);
         },
-        incrementLikes({images},index){
+        [INCREMENT_LIKES]({images},index){
             images[index].countOfLike++;
             images[index].isLikeClicked = true;
         },
-        incrementDislikes({images}, index){
+        [INCREMENT_DISLIKES]({images}, index){
             images[index].countOfDislike++;
             images[index].isDislikeClicked = true;
         },
-        decrementLikes({images}, index){
+        [DECREMENT_LIKES]({images}, index){
             images[index].countOfLike--;
             images[index].isLikeClicked = false;
         },
-        decrementDislikes({images}, index){
+        [DECREMENT_DISLIKES]({images}, index){
             images[index].countOfDislike--;
             images[index].isDislikeClicked = false;
         },
-        addComment({images}, {index, commentData}){
+        [ADD_COMMENT]({images}, {index, commentData}){
             images[index].comments.push(commentData);
         }
     },
     actions: {
         addImage({state,commit}, element){
-            commit('addImage', element);
+            commit(ADD_IMAGE, element);
             localStorage.setItem("images-store", JSON.stringify(state.images));
         },
         incrementLikes({state,commit}, index){
             const {images} = state;
             if (!images[index].isLikeClicked){
-                commit('incrementLikes', index);
+                commit(INCREMENT_LIKES, index);
 
                 if(images[index].isDislikeClicked){
-                    commit('decrementDislikes', index)
+                    commit(DECREMENT_DISLIKES, index)
                 }
 
                 localStorage.setItem("images-store", JSON.stringify(state.images));
@@ -51,17 +53,17 @@ export const store = new Vuex.Store({
         incrementDislikes({state,commit}, index){
             const {images} = state;
             if(!images[index].isDislikeClicked){
-                commit('incrementDislikes', index);
+                commit(INCREMENT_DISLIKES, index);
 
                 if (images[index].isLikeClicked){
-                    commit('decrementLikes', index);
+                    commit(DECREMENT_LIKES, index);
                 }
 
                 localStorage.setItem("images-store", JSON.stringify(state.images));
             }
         },
         addComment({state,commit},{index, commentData}){
-            commit('addComment', {index, commentData});
+            commit(ADD_COMMENT, {index, commentData});
             localStorage.setItem("images-store", JSON.stringify(state.images));
         }
     }
