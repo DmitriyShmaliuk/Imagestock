@@ -9,6 +9,26 @@
         <button>
             <v-icon color="#ffffff" :size="25">mdi-email</v-icon>
         </button>
+
+        <v-dialog max-width="360"
+                  v-model="isError">
+            <v-card>
+                <v-card-title class="headline">
+                    <h2>Error</h2>
+                </v-card-title>
+
+                <v-card-text>
+                    {{errorMessage}}
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-btn color="#21b8c6" text
+                           @click="isError = false">
+                        OK
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </form>
 </template>
 
@@ -18,14 +38,20 @@ export default{
     data(){
         return {
             userName: "",
-            userComment: ""
+            userComment: "",
+            isError: false,
+            errorMessage: "",
         }
     },
     methods:{
         sendInformation(){
-            if (this.userName.length >= 2 && this.userComment.length >= 3){
+            if (this.userName.length >= 2 && this.userComment.length >= 1) {
                 this.$emit('send-info', {userName: this.userName, userComment: this.userComment});
                 this.userName = this.userComment = "";
+            }
+            else {
+                this.isError = true;
+                this.errorMessage = "Please enter longer user name or enter comment!!!";
             }
         }
     }
@@ -81,5 +107,34 @@ export default{
                 transform: rotate(-45deg);
             }
         }
+    }
+
+    .v-dialog{
+       .v-card{
+           .v-card__title{
+               padding: 16px 0px 10px 15px;
+
+               h2{
+                   font-family: "Roboto", sans-serif;
+                   font-size: 24px;
+                   color: #8499a7;
+               }
+           }
+
+           .v-card__text{
+               padding: 0px 0px 5px 15px;
+           }
+
+           .v-card__actions{
+               display: flex;
+               justify-content: flex-end;
+               padding-top: 0px;
+               padding-right: 0px;
+
+               .v-btn{
+                   font-weight: bold;
+               }
+           }
+       }
     }
 </style>
