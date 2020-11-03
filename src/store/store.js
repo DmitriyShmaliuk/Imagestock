@@ -1,3 +1,4 @@
+import Vue from "vue";
 import Vuex from "vuex";
 import {
   ADD_IMAGE,
@@ -7,6 +8,8 @@ import {
   DECREMENT_DISLIKES,
   ADD_COMMENT,
 } from "./mutation-types";
+
+Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
