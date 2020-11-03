@@ -1,4 +1,5 @@
 import Vue from "vue";
+import Vuex from "vuex";
 import Vuetify from "vuetify/lib";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
@@ -7,6 +8,7 @@ import { store } from "./store/store";
 
 Vue.use(Vuetify);
 Vue.use(VueCompositionAPI);
+Vue.use(Vuex);
 
 new Vue({
   vuetify,

@@ -3,7 +3,7 @@
     class="grid-section image-section"
     :style="{ background: `url(${src})` }"
     @mouseover="activeSection"
-    @mouseout="isReactionSectionOpen = !isReactionSectionOpen"
+    @mouseout="disactiveSection"
   >
     <v-container class="reaction" :class="{ active: isReactionSectionOpen }">
       <figure class="dislike-icon" @click="clickDislike">
@@ -68,9 +68,12 @@ export default {
       this.$emit("dislike");
     },
     activeSection() {
-      this.isReactionSectionOpen = !this.isReactionSectionOpen;
+      this.isReactionSectionOpen = true;
       this.$emit("active-section", this.index);
     },
+    disactiveSection (){
+      this.isReactionSectionOpen = false;
+    }
   },
 };
 </script>

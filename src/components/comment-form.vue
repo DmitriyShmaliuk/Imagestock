@@ -1,85 +1,92 @@
 <template>
-    <form class="comment-form"
-          @submit.prevent="sendInformation">
+  <form class="comment-form" @submit.prevent="sendInformation">
+    <input
+      type="text"
+      v-model="userName"
+      placeholder="Type your nickname here"
+    />
+    <textarea
+      placeholder="Write your comment here..."
+      v-model="userComment"
+    ></textarea>
 
-        <input type="text" v-model="userName" placeholder="Type your nickname here"/>
-        <textarea placeholder="Write your comment here..."
-                  v-model="userComment"></textarea>
-
-        <button>
-            <v-icon color="#ffffff" :size="25">mdi-email</v-icon>
-        </button>
-    </form>
+    <button>
+      <v-icon color="#ffffff" :size="25">mdi-email</v-icon>
+    </button>
+  </form>
 </template>
 
 <script>
-export default{
-    name: "comment-form",
-    data(){
-        return {
-            userName: "",
-            userComment: ""
-        }
+export default {
+  name: "comment-form",
+  data() {
+    return {
+      userName: "",
+      userComment: "",
+    };
+  },
+  methods: {
+    sendInformation() {
+      const { userName, userComment } = this;
+
+      if (this.userName.length >= 2 && this.userComment.length >= 3) {
+        this.$emit("send-info", { userName, userComment });
+        this.userName = this.userComment = "";
+      }
     },
-    methods:{
-        sendInformation(){
-            if (this.userName.length >= 2 && this.userComment.length >= 3){
-                this.$emit('send-info', {userName: this.userName, userComment: this.userComment});
-                this.userName = this.userComment = "";
-            }
-        }
-    }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-    .comment-form{
-        position: relative;
-        width: 280px;
-        height: 85px;
+.comment-form {
+  position: relative;
+  width: 280px;
+  height: 85px;
 
-        input[type='text']{
-            width: 100%;
-            border-bottom: 1px solid #a0b0ba;
-        }
+  input[type="text"] {
+    width: 100%;
+    border-bottom: 1px solid #a0b0ba;
+  }
 
-        textarea{
-            margin-top: 11px;
-            width: 225px;
-            height: 50px;
-            resize: none;
-            border-radius: 3px;
-            border: 1px solid #a0b0ba;
+  textarea {
+    margin-top: 11px;
+    width: 225px;
+    height: 50px;
+    resize: none;
+    border-radius: 3px;
+    border: 1px solid #a0b0ba;
 
-            &::-webkit-scrollbar{
-                width: 0;
-            }
-        }
-
-        input[type='text'], textarea{
-            box-sizing: border-box;
-            padding:  0 5px;
-            font-size: 14px;
-            outline: none;
-
-            &:focus{
-                border-color: #21b8c6;
-            }
-        }
-
-        button{
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            width: 50px;
-            height: 50px;
-            border-radius: 5px;
-            outline: none;
-            background-color: #21b8c6;
-
-            .v-icon{
-                transform: rotate(-45deg);
-            }
-        }
+    &::-webkit-scrollbar {
+      width: 0;
     }
+  }
+
+  input[type="text"],
+  textarea {
+    box-sizing: border-box;
+    padding: 0 5px;
+    font-size: 14px;
+    outline: none;
+
+    &:focus {
+      border-color: #21b8c6;
+    }
+  }
+
+  button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    outline: none;
+    background-color: #21b8c6;
+
+    .v-icon {
+      transform: rotate(-45deg);
+    }
+  }
+}
 </style>

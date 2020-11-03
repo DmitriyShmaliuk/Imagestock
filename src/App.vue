@@ -96,6 +96,7 @@ import popup from "./components/popup.vue";
 import { usePopup } from "./utils/popup";
 import { useSection } from "./utils/section";
 import { getSectionStyle } from "./utils/sectionStyle";
+import "./main.css";
 
 export default {
   name: "app",
@@ -107,10 +108,10 @@ export default {
     popup,
   },
   setup(props, { root }) {
-    const IMAGES_STORE = localStorage.getItem("images-store");
     const countGridBlocks = ref(1);
-    const { addImage } = useActions(["addImage"]);
     const images = computed(() => root.$store.getters.images);
+    const IMAGES_STORE = localStorage.getItem("images-store");
+    const { addImage } = useActions(["addImage"]);
 
     if (IMAGES_STORE) {
       const localeStore = JSON.parse(IMAGES_STORE);
@@ -337,8 +338,4 @@ main {
     }
   }
 }
-</style>
-
-<style>
-@import "main.css";
 </style>
