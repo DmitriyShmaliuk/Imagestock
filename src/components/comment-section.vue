@@ -12,15 +12,10 @@
 </template>
 
 <script>
-import {getDateString} from 'auxiliary-functions';
+import { getDateString } from 'auxiliary-functions';
 
 export default {
     name: "comment-section",
-    computed: {
-        commentDate(){
-            return getDateString(new Date(this.date));
-        }
-    },
     props: {
         userName: {
             type: String,
@@ -34,38 +29,43 @@ export default {
             type: String,
             required: true
         }
+    },
+    computed: {
+        commentDate(){
+            return getDateString(new Date(this.date));
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    .comment-section{
-        width: 100%;
-        margin-bottom: 10px;
+.comment-section{
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 0;
+
+    .information {
+        display: flex;
+        justify-content: space-between;
         padding: 0;
 
-        .information {
-            display: flex;
-            justify-content: space-between;
-            padding: 0;
-
-            & > p {
-                margin: 0;
-                font-family: Roboto, sans-serif;
-                font-size: 12px;
-                color: #95a7b3;
-            }
-        }
-
-        .comment {
-            min-height: 32px;
-            padding: 5px;
-            overflow: hidden;
+        & > p {
+            margin: 0;
             font-family: Roboto, sans-serif;
-            font-size: 14px;
-            color: #607583;
-            border-radius: 3px;
-            border: 1px solid #a0b0ba;
+            font-size: 12px;
+            color: #95a7b3;
         }
     }
+
+    .comment {
+        min-height: 32px;
+        padding: 5px;
+        overflow: hidden;
+        font-family: Roboto, sans-serif;
+        font-size: 14px;
+        color: #607583;
+        border-radius: 3px;
+        border: 1px solid #a0b0ba;
+    }
+}
 </style>

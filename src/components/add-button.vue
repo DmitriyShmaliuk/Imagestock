@@ -2,7 +2,7 @@
     <section class="add-button grid-section">
        <label>
            <figure>
-               <img :src="addButtonImage" alt="add button"/>
+               <img :src="images.addButtonImage" alt="add button"/>
                <figcaption>Add your Picture</figcaption>
             </figure>
 
@@ -19,12 +19,14 @@
         data(){
             return{
                 addButtonStatus: false,
-                addButtonImage
+                images: {
+                    addButtonImage
+                }
             }
         },
         methods: {
             addSection({target}){
-                let reader = new FileReader();
+                const reader = new FileReader();
 
                 reader.onloadend = () => {
                     this.$emit('add-image', reader.result);
