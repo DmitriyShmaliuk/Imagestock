@@ -35,7 +35,7 @@
 
       <v-row>
         <v-col md="10" offset-md="1">
-          <v-text-field solo hide-details></v-text-field>
+          <v-text-field type="password" solo hide-details></v-text-field>
         </v-col>
       </v-row>
 
