@@ -1,81 +1,30 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import {
-  ADD_IMAGE,
-  INCREMENT_LIKES,
-  INCREMENT_DISLIKES,
-  DECREMENT_LIKES,
-  DECREMENT_DISLIKES,
-  ADD_COMMENT,
-} from "./mutation-types";
+import { SET_USER } from "./mutation-types";
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
-    images: [],
+    user: null,
   },
   getters: {
-    images({ images }) {
-      return images;
+    isAuth({ user }) {
+      return user !== null;
     },
   },
   mutations: {
-    [ADD_IMAGE]({ images }, element) {
-      images.push(element);
-    },
-    [INCREMENT_LIKES]({ images }, index) {
-      images[index].countOfLike++;
-      images[index].isLikeClicked = true;
-    },
-    [INCREMENT_DISLIKES]({ images }, index) {
-      images[index].countOfDislike++;
-      images[index].isDislikeClicked = true;
-    },
-    [DECREMENT_LIKES]({ images }, index) {
-      images[index].countOfLike--;
-      images[index].isLikeClicked = false;
-    },
-    [DECREMENT_DISLIKES]({ images }, index) {
-      images[index].countOfDislike--;
-      images[index].isDislikeClicked = false;
-    },
-    [ADD_COMMENT]({ images }, { index, commentData }) {
-      images[index].comments.push(commentData);
+    [SET_USER](state, userData) {
+      state.user = userData;
     },
   },
   actions: {
-    addImage({ state, commit }, element) {
-      commit(ADD_IMAGE, element);
-      localStorage.setItem("images-store", JSON.stringify(state.images));
-    },
-    incrementLikes({ state, commit }, index) {
-      const { images } = state;
-      if (!images[index].isLikeClicked) {
-        commit(INCREMENT_LIKES, index);
+    setUser({ commit }, userData) {
+      const { name, avatar } = userData;
 
-        if (images[index].isDislikeClicked) {
-          commit(DECREMENT_DISLIKES, index);
-        }
-
-        localStorage.setItem("images-store", JSON.stringify(state.images));
+      if (userData && avatar) {
+        commit(SET_USER, { name, avatar });
       }
-    },
-    incrementDislikes({ state, commit }, index) {
-      const { images } = state;
-      if (!images[index].isDislikeClicked) {
-        commit(INCREMENT_DISLIKES, index);
-
-        if (images[index].isLikeClicked) {
-          commit(DECREMENT_LIKES, index);
-        }
-
-        localStorage.setItem("images-store", JSON.stringify(state.images));
-      }
-    },
-    addComment({ state, commit }, { index, commentData }) {
-      commit(ADD_COMMENT, { index, commentData });
-      localStorage.setItem("images-store", JSON.stringify(state.images));
     },
   },
 });
