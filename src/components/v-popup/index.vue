@@ -39,7 +39,7 @@ export default {
 
   .popup-content {
     width: 30%;
-    height: 55%;
+    min-height: 51%;
     background: #ffffff;
     border-radius: 1rem;
   }
