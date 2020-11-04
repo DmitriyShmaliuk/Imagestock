@@ -23,7 +23,12 @@
 
       <v-row>
         <v-col md="10" offset-md="1">
-          <v-text-field solo hide-details></v-text-field>
+          <v-text-field
+            type="email"
+            v-model="userData.email"
+            solo
+            hide-details
+          ></v-text-field>
         </v-col>
       </v-row>
 
@@ -35,7 +40,12 @@
 
       <v-row>
         <v-col md="10" offset-md="1">
-          <v-text-field type="password" solo hide-details></v-text-field>
+          <v-text-field
+            type="password"
+            v-model="userData.password"
+            solo
+            hide-details
+          ></v-text-field>
         </v-col>
       </v-row>
 
@@ -45,17 +55,17 @@
         </v-col>
       </v-row>
 
-      <v-row class="mt-5 button-section">
+      <v-row class="mt-4 button-section">
         <v-col md="10" offset-md="1">
-          <v-btn color="#21b8c6" min-width="100%">Login</v-btn>
+          <v-btn color="#21b8c6" min-width="100%" @click="send">Login</v-btn>
         </v-col>
       </v-row>
 
-      <v-row class="mt-3 text-center additional-action">
+      <v-row class="mt-4 text-center additional-action">
         <v-col md="10" offset-md="1">
           <p>
-            <span>Reset password</span> or
-            <span>Signup now</span>
+            Not a memeber?
+            <span @click="openRegistrationPopup">Signup now</span>
           </p>
         </v-col>
       </v-row>
@@ -74,8 +84,28 @@ export default {
   props: {
     ...VPopup.props,
   },
+  data: () => ({
+    userData: {
+      email: null,
+      password: null,
+    },
+  }),
   methods: {
     ...VPopup.methods,
+    openRegistrationPopup() {
+      this.$emit("close");
+      this.$emit("open-registration-popup");
+    },
+    send() {
+      this.$emit("login", {
+        ...this.userData,
+      });
+      this.cleanForm();
+    },
+    cleanForm() {
+      this.userData.email = null;
+      this.userData.password = null;
+    },
   },
 };
 </script>
