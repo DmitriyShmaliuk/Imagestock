@@ -9,9 +9,7 @@ export const store = new Vuex.Store({
     user: null,
   },
   getters: {
-    isAuth({ user }) {
-      return user !== null;
-    },
+    isAuth: ({ user }) => user !== null,
   },
   mutations: {
     [SET_USER](state, userData) {
@@ -20,10 +18,10 @@ export const store = new Vuex.Store({
   },
   actions: {
     setUser({ commit }, userData) {
-      const { name, avatar } = userData;
+      const { name } = userData;
 
-      if (userData && avatar) {
-        commit(SET_USER, { name, avatar });
+      if (name) {
+        commit(SET_USER, { name });
       }
     },
   },
