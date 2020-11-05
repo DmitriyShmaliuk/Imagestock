@@ -14,6 +14,7 @@
       <v-registration-popup
         :opened="registrationPopupOpened"
         @close="closeRegistrationPopup"
+        @signup="signup"
       >
       </v-registration-popup>
     </main>
@@ -25,6 +26,8 @@ import { ref } from "@vue/composition-api";
 import VApplicationBar from "./components/v-application-bar";
 import VAuthenticationPopup from "./components/v-authentication-popup";
 import VRegistrationPopup from "./components/v-registration-popup";
+import axios from "axios";
+import keys from "./keys";
 import "./main.css";
 
 export default {
@@ -55,6 +58,17 @@ export default {
       registrationPopupOpened.value = false;
     };
 
+    const signup = async function ({ email }) {
+      try {
+        if (email) {
+          const user = await axios.get(`${keys.serverURL}users?q=${email}`);
+          console.log(user);
+        }
+      } catch (err) {
+        throw new Error(`Server is not avaliable`);
+      }
+    };
+
     return {
       authPopupOpened,
       closeAuthPopup,
@@ -62,6 +76,7 @@ export default {
       registrationPopupOpened,
       openRegistrationPopup,
       closeRegistrationPopup,
+      signup,
     };
   },
 };
