@@ -12,6 +12,7 @@
     "@vue/composition-api": "^1.0.0-beta.16",
     "auxiliary-functions": "git+ssh://git@github.com:WilliaamKing/Auxiliary-functions.git#0.0.1",
     "axios": "^0.21.0",
+    "bcryptjs": "^2.4.3",
     "core-js": "^3.4.3",
     "vue": "^2.6.10",
     "vuetify": "^2.1.0",
