@@ -84,9 +84,7 @@
 
       <v-row class="mt-5 button-section">
         <v-col md="10" offset-md="1">
-          <v-btn color="#21b8c6" min-width="100%" @click="send"
-            >Signup</v-btn
-          >
+          <v-btn color="#21b8c6" min-width="100%" @click="send">Signup</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -115,10 +113,15 @@ export default {
   methods: {
     ...VPopup.methods,
     send() {
-      this.$emit("signup", {
-        ...this.userData,
-      });
-      this.cleanForm();
+      if (this.confirm === this.password) {
+        this.$emit("signup", {
+          ...this.userData,
+        });
+        this.cleanForm();
+      }
+      else {
+        this.$emit('error', "Passwords don't match");
+      }
     },
     cleanForm() {
       this.userData.name = null;
