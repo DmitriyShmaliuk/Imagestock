@@ -1,12 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { SET_USER } from "./mutation-types";
+import { SET_USER, SET_ERROR } from "./mutation-types";
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
     user: null,
+    error: null,
   },
   getters: {
     isAuth: ({ user }) => user !== null,
@@ -15,14 +16,21 @@ export const store = new Vuex.Store({
     [SET_USER](state, userData) {
       state.user = userData;
     },
+    [SET_ERROR](state, error) {
+      state.error = error;
+    },
   },
   actions: {
     setUser({ commit }, userData) {
-      const { name } = userData;
-
-      if (name) {
-        commit(SET_USER, { name });
+      if (userData) {
+        commit(SET_USER, userData);
       }
+    },
+    setError({ commit }, error) {
+      commit(SET_ERROR, error.toString());
+    },
+    resetError({ commit }) {
+      commit(SET_ERROR, null);
     },
   },
 });
