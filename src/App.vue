@@ -23,6 +23,8 @@
 
 <script>
 import { ref } from "@vue/composition-api";
+import { useActions } from "vuex-composition-helpers";
+import bcrypt from "bcryptjs";
 import VApplicationBar from "./components/v-application-bar";
 import VAuthenticationPopup from "./components/v-authentication-popup";
 import VRegistrationPopup from "./components/v-registration-popup";
@@ -58,14 +60,26 @@ export default {
       registrationPopupOpened.value = false;
     };
 
-    const signup = async function ({ email }) {
-      try {
-        if (email) {
-          const user = await axios.get(`${keys.serverURL}users?q=${email}`);
-          console.log(user);
-        }
-      } catch (err) {
-        throw new Error(`Server is not avaliable`);
+    const { setUser, setError } = useActions(["setUser", "setError"]);
+
+    const signup = async function ({ email, name, password }) {
+      const hasPassword = await bcrypt.hash(password, 10);
+      const requestBody = { email, name, password: hasPassword };
+      const { status, data: { message, user }} = await axios.post(
+        `${keys.serverURL}users/add`, requestBody, 
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+      closeRegistrationPopup()
+
+      if (status !== 202) {
+        setUser(user);
+      } 
+      else {
+        setError(message);
       }
     };
 
