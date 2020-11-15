@@ -5,6 +5,10 @@
     </header>
 
     <main>
+      <v-alert type="warning" icon="mdi-information-outline" v-show="isError">
+        {{ errorMessage }}
+      </v-alert>
+
       <v-authentication-popup
         :opened="authPopupOpened"
         @close="closeAuthPopup"
@@ -22,14 +26,16 @@
 </template>
 
 <script>
-import { ref } from "@vue/composition-api";
-import { useActions } from "vuex-composition-helpers";
+import { watch, computed } from "@vue/composition-api";
+import { useActions, useState } from "vuex-composition-helpers";
 import bcrypt from "bcryptjs";
 import VApplicationBar from "./components/v-application-bar";
 import VAuthenticationPopup from "./components/v-authentication-popup";
 import VRegistrationPopup from "./components/v-registration-popup";
+import { usePopup } from './utils/usePopup';
 import axios from "axios";
 import keys from "./keys";
+import { errorAlert } from "./config";
 import "./main.css";
 
 export default {
@@ -40,25 +46,17 @@ export default {
     VRegistrationPopup,
   },
   setup() {
-    const authPopupOpened = ref(false);
+    const { 
+      opened: authPopupOpened, 
+      close: closeAuthPopup, 
+      open: openAuthPopup
+    } = usePopup ();
 
-    const closeAuthPopup = function () {
-      authPopupOpened.value = false;
-    };
-
-    const openAuthPopup = function () {
-      authPopupOpened.value = true;
-    };
-
-    const registrationPopupOpened = ref(false);
-
-    const openRegistrationPopup = function () {
-      registrationPopupOpened.value = true;
-    };
-
-    const closeRegistrationPopup = function () {
-      registrationPopupOpened.value = false;
-    };
+    const { 
+      opened: registrationPopupOpened, 
+      close: closeRegistrationPopup, 
+      open: openRegistrationPopup
+    } = usePopup ();
 
     const { setUser, setError } = useActions(["setUser", "setError"]);
 
@@ -67,7 +65,7 @@ export default {
       const requestBody = { email, name, password: hasPassword };
 
       try {
-        const { data: { user } } = await axios.post(
+        const { data: { user }} = await axios.post(
           `${keys.serverURL}users/add`, 
           requestBody, 
           {
@@ -77,16 +75,30 @@ export default {
           }
         );
 
-        closeRegistrationPopup();
         setUser(user);
       } 
       catch (err) {
-        const { data: { message: errorMessage } } = err.response;
+        const { data: { message: errorMessage }} = err.response;
         const message = errorMessage ? errorMessage : "Error";
-        
-        setError(message);
+
+        setError(message);  
       }
+
+      closeRegistrationPopup();
     };
+
+    const { error: errorMessage } = useState(['error']);
+    const isError = computed(() => errorMessage.value !== null);
+    const { resetError } = useActions(["resetError"]);
+
+    watch (
+      () => isError.value,
+      (to) => {
+        if (to){
+          setTimeout(() => resetError(), errorAlert.activeTime);
+        }
+      }
+    );
 
     return {
       authPopupOpened,
@@ -96,6 +108,8 @@ export default {
       openRegistrationPopup,
       closeRegistrationPopup,
       signup,
+      errorMessage,
+      isError,
     };
   },
 };
