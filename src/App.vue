@@ -65,20 +65,25 @@ export default {
     const signup = async function ({ email, name, password }) {
       const hasPassword = await bcrypt.hash(password, 10);
       const requestBody = { email, name, password: hasPassword };
-      const { status, data: { message, user }} = await axios.post(
-        `${keys.serverURL}users/add`, requestBody, 
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
 
-      closeRegistrationPopup()
+      try {
+        const { data: { user } } = await axios.post(
+          `${keys.serverURL}users/add`, 
+          requestBody, 
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      if (status !== 202) {
+        closeRegistrationPopup();
         setUser(user);
       } 
-      else {
+      catch (err) {
+        const { data: { message: errorMessage } } = err.response;
+        const message = errorMessage ? errorMessage : "Error";
+        
         setError(message);
       }
     };
